@@ -12,7 +12,7 @@ import ru.yandex.practicum.filmorate.validate.ValidException;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/filmorate/films")
+@RequestMapping(value = "/films")
 @Slf4j
 public class FilmController {
 
