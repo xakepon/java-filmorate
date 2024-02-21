@@ -33,8 +33,8 @@ public class UserService {
     }
 
     private void userValid(User user) throws ValidException {
-        if (user.getLogin().contains(" ") || user.getLogin().isBlank()) {
-            log.info("Логин не олжен быть пустым и содержать пробелов");
+        if (user.getLogin().contains(" ")) {
+            log.info("Логин не должен содержать пробелов");
             throw new ValidException("Логин не олжен быть пустым и содержать пробелов");
         }
         if (!user.getEmail().matches("^[a-zA-Z0-9_+&*-]+(?:" +
