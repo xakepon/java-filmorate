@@ -26,6 +26,10 @@ public class FilmService {
     }
 
     public void updateFilm(Film film) throws ValidException {
+        if (!films.containsKey(film.getId())) {
+            log.warn("Фильм с айди {} не найден", film.getId());
+            throw new ValidException("Фильм с айди не найден");
+        }
         checkFilm(film);
         dateValidFilm(film);
         films.put(film.getId(), film);
