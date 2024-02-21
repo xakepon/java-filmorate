@@ -18,8 +18,6 @@ public class User {
     @NotBlank(message = "электронная почта не пустая")
     private String email; // электронная почта пользователя
 
-    @NotNull(message = "логин не null")
-    @NotBlank(message = "логин не пустой")
     private String login; // логин пользователя
 
     @NotNull(message = "имя пользовтеля не null")
