@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.validate.ValidException;
 
 import java.util.List;
+
 @RestController
 @RequestMapping("/filmorate/users")
 @Slf4j
