@@ -15,7 +15,7 @@ public class FilmService {
     private static int FILM_ID = 0;
 
     public List<Film> getAllFilms() {
-        return (List<Film>) films.values();
+        return List.copyOf(films.values());
     }
 
     public void addFilm(Film film) throws ValidException {

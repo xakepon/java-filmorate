@@ -16,7 +16,7 @@ public class UserService {
     private static int USER_ID = 0;
 
     public List<User> getAllUsers() {
-        return (List<User>) users.values();
+        return List.copyOf(users.values());
     }
 
     public void addUser(User user) throws ValidException {
