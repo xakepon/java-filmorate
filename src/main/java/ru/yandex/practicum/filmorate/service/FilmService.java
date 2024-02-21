@@ -32,7 +32,7 @@ public class FilmService {
     }
 
     private void dateValidFilm(Film film) throws ValidException {
-        if (film.getReleaseDate().isBefore(LocalDate.now()) || film.getReleaseDate().equals(LocalDate.now())) {
+        if (film.getReleaseDate().isBefore(LocalDate.now()) && !film.getReleaseDate().equals(LocalDate.now())) {
             log.info("Дата фильма " + film.getName() + " выходит за текущую дату в будущее");
             throw new ValidException("Дата выхода фильма не корректная, из будущего");
         }
