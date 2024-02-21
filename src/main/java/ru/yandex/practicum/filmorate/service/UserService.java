@@ -43,6 +43,10 @@ public class UserService {
             log.info("Ошибка проверки электронной почты");
             throw new ValidException("Ошибка проверки электронной почты");
         }
+        if (user.getName() == null || user.getName().trim().isEmpty()) {
+            log.info("Поле имени не может быть пустым");
+            user.setName(user.getLogin());
+        }
     }
 
     private void checkUser(User user) throws ValidException {
