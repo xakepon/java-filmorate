@@ -15,10 +15,10 @@ import java.util.List;
 @RequestMapping(value = "/films")
 @Slf4j
 public class FilmController {
-
     private final FilmService filmService = new FilmService();
+
     // добавление фильма
-    @PostMapping
+    /@PostMapping
     public ResponseEntity<Film> addFilm(@Validated @RequestBody Film film) {
         try {
             filmService.addFilm(film);
