@@ -11,7 +11,7 @@ public class MyDurationSerializer extends JsonSerializer<Duration> {
 
     @Override
     public void serialize(Duration value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-        long milliseconds = value.toMillis();
+        long milliseconds = value.toSeconds();
         gen.writeNumber(milliseconds);
     }
 }
