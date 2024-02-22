@@ -1,8 +1,10 @@
 package ru.yandex.practicum.filmorate.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import ru.yandex.practicum.filmorate.controller.MyDurationSerializer;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -34,7 +36,7 @@ public class Film {
     private LocalDate releaseDate; // дата релиза фильма
 
     @NotNull(message = "продолжительность фильма не null")
-
+    @JsonSerialize(using = MyDurationSerializer.class)
     private Duration duration; // продолжительность фильма
 
 }
