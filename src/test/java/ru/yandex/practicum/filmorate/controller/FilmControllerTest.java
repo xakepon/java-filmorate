@@ -23,7 +23,7 @@ class FilmControllerTest {
     @DisplayName(value = "Проверка создания фильма с корректными данными")
     public void addFilmValidData() {
         Film film = new Film(1, "Name1", "Description1",
-                LocalDate.of(2022, 5, 29), Duration.ofMinutes(10));
+                LocalDate.of(2022, 5, 29), Duration.ofSeconds(1000));
 
         ResponseEntity<Film> response = restTemplate.postForEntity("/films", film, Film.class);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -33,7 +33,7 @@ class FilmControllerTest {
     @DisplayName(value = "Проверка создания фильма с не корректными данными")
     public void addFilmInValidData() {
         Film film = new Film(0, null, "Description2",
-                LocalDate.of(2025, 3, 4),Duration.ofMinutes(30));
+                LocalDate.of(2025, 3, 4),Duration.ofSeconds(3000));
 
         ResponseEntity<Film> response = restTemplate.postForEntity("/films", film, Film.class);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
