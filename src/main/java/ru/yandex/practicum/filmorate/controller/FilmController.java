@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j
 public class FilmController {
 
-    private final FilmService filmService = new FilmService();;
+    private final FilmService filmService = new FilmService();
 
    // добавление фильма
     @PostMapping
