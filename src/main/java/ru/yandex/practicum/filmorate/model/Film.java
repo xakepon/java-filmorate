@@ -10,7 +10,6 @@ import javax.validation.constraints.Size;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 /**
  * Film.
@@ -37,5 +36,5 @@ public class Film {
     @NotNull(message = "продолжительность фильма не null")
 
     private Duration duration; // продолжительность фильма
-    
+
 }
