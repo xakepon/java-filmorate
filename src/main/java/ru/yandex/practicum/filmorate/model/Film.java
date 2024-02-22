@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode
-public class Film{
+public class Film {
 
     private int id; // целочисленный идентификатор фильма
 
