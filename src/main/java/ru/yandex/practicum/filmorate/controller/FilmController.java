@@ -18,7 +18,7 @@ public class FilmController {
     private final FilmService filmService = new FilmService();
 
     // добавление фильма
-    /@PostMapping
+    @PostMapping
     public ResponseEntity<Film> addFilm(@Validated @RequestBody Film film) {
         try {
             filmService.addFilm(film);
