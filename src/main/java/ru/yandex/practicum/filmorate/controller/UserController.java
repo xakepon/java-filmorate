@@ -15,13 +15,9 @@ import java.util.List;
 @RequestMapping("/users")
 @Slf4j
 public class UserController {
-    private final UserService userService;
+    private final UserService userService = new UserService();;
 
-    public UserController() {
-        userService = new UserService();
-    }
-
-   //создание пользователя
+    //создание пользователя
     @PostMapping
     public ResponseEntity<User> addUser(@Validated @RequestBody User user) {
         try {

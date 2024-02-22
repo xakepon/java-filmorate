@@ -13,7 +13,7 @@ import java.util.Objects;
 @Slf4j
 public class UserService {
     private final Map<Integer, User> users = new HashMap<>();
-    private static int USER_ID = 0;
+    private int userId = 0;
 
     public List<User> getAllUsers() {
         return List.copyOf(users.values());
@@ -21,18 +21,22 @@ public class UserService {
 
     public void addUser(User user) throws ValidException {
         checkUser(user);
-        userValid(user);
-        user.setId(++USER_ID);
+        user.setId(++userId);
         users.put(user.getId(), user);
     }
 
     public void updateUser(User user) throws ValidException {
         checkUser(user);
-        userValid(user);
         users.put(user.getId(), user);
     }
 
-    private void userValid(User user) throws ValidException {
+    private void checkUser(User user) throws ValidException {
+        for (User mails : users.values()) {
+            if (Objects.equals(mails.getEmail(), user.getEmail())) {
+                log.info("Пользователь с такой почтой уже существует");
+                throw new ValidException("Пользователь с такой почтой уже существует");
+            }
+        }
         if (user.getLogin().contains(" ")) {
             log.info("Логин не должен содержать пробелов");
             throw new ValidException("Логин не олжен быть пустым и содержать пробелов");
@@ -46,15 +50,6 @@ public class UserService {
         if (user.getName() == null || user.getName().trim().isEmpty()) {
             log.info("Поле имени не может быть пустым");
             user.setName(user.getLogin());
-        }
-    }
-
-    private void checkUser(User user) throws ValidException {
-        for (User mails : users.values()) {
-            if (Objects.equals(mails.getEmail(), user.getEmail())) {
-                log.info("Пользователь с такой почтой уже существует");
-                throw new ValidException("Пользователь с такой почтой уже существует");
-            }
         }
     }
 }

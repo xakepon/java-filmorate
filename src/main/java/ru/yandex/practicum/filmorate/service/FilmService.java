@@ -12,7 +12,7 @@ import java.util.Map;
 @Slf4j
 public class FilmService {
     private final Map<Integer, Film> films = new HashMap<>();
-    private static int FILM_ID = 0;
+    private int filmID = 0;
 
     public List<Film> getAllFilms() {
         return List.copyOf(films.values());
@@ -20,8 +20,7 @@ public class FilmService {
 
     public void addFilm(Film film) throws ValidException {
         checkFilm(film);
-        dateValidFilm(film);
-        film.setId(++FILM_ID);
+        film.setId(++filmID);
         films.put(film.getId(), film);
     }
 
@@ -31,21 +30,21 @@ public class FilmService {
             throw new ValidException("Фильм с айди не найден");
         }
         checkFilm(film);
-        dateValidFilm(film);
         films.put(film.getId(), film);
-    }
-
-    private void dateValidFilm(Film film) throws ValidException {
-        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
-            log.info("Дата фильма " + film.getName() + " выходит за текущую дату в будущее");
-            throw new ValidException("Дата выхода фильма не корректная, из будущего");
-        }
     }
 
     private void checkFilm(Film film) throws ValidException {
         if (films.containsValue(film)) {
             log.info("Ошибка проверки фильма " + film.getName() + ". Фильм уже добавлен в пееречень");
             throw new ValidException("Фильм уже добавлен в перечень");
+        }
+        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
+            log.info("Дата фильма " + film.getName() + " выходит за текущую дату в будущее");
+            throw new ValidException("Дата выхода фильма не корректная, из будущего");
+        }
+        if (film.getDuration().getSeconds() > 0) {
+            log.info("Продолжительность фильма " + film.getName() + " не положительное число");
+            throw new ValidException("Продолжительность фильма не положительное число");
         }
     }
 }

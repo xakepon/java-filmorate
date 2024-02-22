@@ -16,11 +16,7 @@ import java.util.List;
 @Slf4j
 public class FilmController {
 
-    private final FilmService filmService;
-
-    public FilmController() {
-        filmService = new FilmService();
-    }
+    private final FilmService filmService = new FilmService();;
 
    // добавление фильма
     @PostMapping
@@ -44,7 +40,7 @@ public class FilmController {
             return new ResponseEntity<>(film, HttpStatus.OK);
         } catch (ValidException e) {
             log.info(e.getMessage());
-            return new ResponseEntity<>(film, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(film, HttpStatus.BAD_REQUEST);
         }
     }
 
