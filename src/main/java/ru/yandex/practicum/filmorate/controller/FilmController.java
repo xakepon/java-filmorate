@@ -39,7 +39,7 @@ public class FilmController {
             return new ResponseEntity<>(film, HttpStatus.OK);
         } catch (ValidException e) {
             log.info(e.getMessage());
-            return new ResponseEntity<>(film, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(film, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
