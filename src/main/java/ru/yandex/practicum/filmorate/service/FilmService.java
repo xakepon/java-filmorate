@@ -42,7 +42,7 @@ public class FilmService {
             log.info("Дата фильма " + film.getName() + " выходит за текущую дату в будущее");
             throw new ValidException("Дата выхода фильма не корректная, из будущего");
         }
-        if (film.getDuration().getSeconds() > 0) {
+        if (film.getDuration().getSeconds() <= 0) {
             log.info("Продолжительность фильма " + film.getName() + " не положительное число");
             throw new ValidException("Продолжительность фильма не положительное число");
         }
