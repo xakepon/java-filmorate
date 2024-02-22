@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import ru.yandex.practicum.filmorate.controller.MyDurationSerializer;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -19,10 +18,8 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode
-public class Film {
+public class Film{
 
-    MyDurationSerializer myDurationSerializer = new MyDurationSerializer();
-    
     private int id; // целочисленный идентификатор фильма
 
     @NotNull(message = "название фильма не null")

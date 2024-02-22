@@ -17,9 +17,7 @@ import java.util.List;
 public class FilmController {
 
     private final FilmService filmService = new FilmService();
-    MyDurationSerializer myDurationSerializer = new MyDurationSerializer();
-
-   // добавление фильма
+    // добавление фильма
     @PostMapping
     public ResponseEntity<Film> addFilm(@Validated @RequestBody Film film) {
         try {
