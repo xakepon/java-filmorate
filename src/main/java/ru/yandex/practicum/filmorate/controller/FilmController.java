@@ -50,4 +50,27 @@ public class FilmController {
         return new ResponseEntity<>(filmService.getAllFilms(), HttpStatus.OK);
     }
 
+    @GetMapping("/{filmId}")
+    public Film getFilm(@PathVariable int id) {
+        return filmService.getFilmById(id);
+    }
+
+    @PutMapping("/{filmId}/like/{userId}")
+    public void giveFilmLike(@PathVariable int filmId,
+                               @PathVariable int userId) {
+        filmService.giveLike(userId, filmId);
+    }
+
+    @DeleteMapping("/{filmId}/like/{userId}")
+    public void delLike(@PathVariable int filmId,
+                           @PathVariable int userId) {
+        filmService.delLike(userId, filmId);
+    }
+
+    @GetMapping("/popular")
+    public List<Film> getBestFilms(
+            @RequestParam(value = "count", defaultValue = "10", required = false) Integer count) {
+        return filmService.getMostLikedFilms(count);
+    }
+
 }

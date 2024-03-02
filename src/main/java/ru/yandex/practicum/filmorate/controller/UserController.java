@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.validate.ValidException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -49,5 +50,35 @@ public class UserController {
         log.info("Получен список всех пользователей");
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
+
+    @GetMapping("/{userId}")
+    public User getUser(@PathVariable int userId) {
+        return userService.getUserById(userId);
+    }
+
+    @PutMapping("/{userId}/friends/{friendId}")
+    public void addFriend(@PathVariable int userId,
+                          @PathVariable int friendId) {
+        userService.addFriend(userId, friendId);
+    }
+
+    @DeleteMapping("/{userId}/friends/{friendId}")
+    public void deleteFriend(@PathVariable int userId,
+                             @PathVariable int friendId) {
+        userService.delFriend(userId, friendId);
+    }
+
+    @GetMapping("/{userId}/friends")
+    public ArrayList<User> getFriends(@PathVariable int userId) {
+        return userService.getFriends(userId);
+    }
+
+    @GetMapping("/{userId}/friends/common/{otherId}")
+    public ArrayList<User> getMutualFriends(@PathVariable int userId,
+                                            @PathVariable int otherId) {
+        return userService.getMutualFriends(userId, otherId);
+    }
+
+
 
 }
