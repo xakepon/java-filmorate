@@ -12,5 +12,6 @@ public interface FilmStorage {
     Film updateFilm(Film film) throws ValidException;
 
     List<Film> getAllFilms();
+    
     List<Film> getPopularFilms(int count);
 }
