@@ -25,6 +25,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         log.debug("Фильм был добавлен");
         return film;
     }
+    
     @Override
     public Film updateFilm(Film film) throws ValidException {
         if (!films.containsKey(film.getId())) {
