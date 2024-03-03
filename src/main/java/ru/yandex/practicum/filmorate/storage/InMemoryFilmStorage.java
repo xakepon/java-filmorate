@@ -25,7 +25,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         log.debug("Фильм был добавлен");
         return film;
     }
-    
+
     @Override
     public Film updateFilm(Film film) throws ValidException {
         if (!films.containsKey(film.getId())) {
@@ -44,11 +44,6 @@ public class InMemoryFilmStorage implements FilmStorage {
     public List<Film> getAllFilms() {
         log.debug("Список всех фильмов получен");
         return List.copyOf(films.values());
-    }
-
-    @Override
-    public List<Film> getPopularFilms(int count) {
-        return null;
     }
 
     private void checkFilm(Film film) throws ValidException {
