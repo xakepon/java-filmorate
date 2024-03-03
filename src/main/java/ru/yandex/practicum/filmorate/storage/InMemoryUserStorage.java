@@ -33,7 +33,7 @@ public class InMemoryUserStorage implements UserStorage {
         log.debug("Пользовтель успешно обновлен");
         return user;
     }
-    
+
     @Override
     public List<User> getAllUsers() {
         log.debug("Список всех пользователей получен");
@@ -67,5 +67,4 @@ public class InMemoryUserStorage implements UserStorage {
             user.setName(user.getLogin());
         }
     }
-
 }
