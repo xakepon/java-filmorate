@@ -12,10 +12,11 @@ import java.util.Objects;
 
 @Slf4j
 @Component
-public class InMemoryUserStorage implements UserStorage{
+public class InMemoryUserStorage implements UserStorage {
 
     private final Map<Integer, User> users = new HashMap<>();
     private int userId = 0;
+
     @Override
     public User addUser(User user) throws ValidException {
         checkUser(user);
@@ -24,6 +25,7 @@ public class InMemoryUserStorage implements UserStorage{
         log.debug("Пользовтель успешно добавлен");
         return user;
     }
+
     @Override
     public User updateUser(User user) throws ValidException {
         checkUser(user);
@@ -31,6 +33,7 @@ public class InMemoryUserStorage implements UserStorage{
         log.debug("Пользовтель успешно обновлен");
         return user;
     }
+    
     @Override
     public List<User> getAllUsers() {
         log.debug("Список всех пользователей получен");
