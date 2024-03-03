@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping(value = "/films")
 @Slf4j
 public class FilmController {
-    private final FilmService filmService = new FilmService();
+    private FilmService filmService;
 
     // добавление фильма
     @PostMapping
