@@ -16,7 +16,7 @@ import java.util.Set;
 public class User {
 
     @NonNull
-    private int userID; // целочисленный идентификатор пользователя
+    private int id; // целочисленный идентификатор пользователя
 
     @NonNull
     @NotNull(message = "электронная почта не null")

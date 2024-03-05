@@ -21,7 +21,7 @@ import java.util.Set;
 @Data
 public class Film {
     @NonNull
-    private int idFilm; // целочисленный идентификатор фильма
+    private int id; // целочисленный идентификатор фильма
 
     @NonNull
     @NotNull(message = "название фильма не null")
