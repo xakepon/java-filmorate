@@ -1,7 +1,5 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.RequiredArgsConstructor;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,19 +16,20 @@ import java.time.Duration;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class FilmControllerTest {
     FilmController filmController;
     Film film;
     @Autowired
     private TestRestTemplate restTemplate;
+
     @BeforeEach
-            void setUp() {
+    void setUp() {
         filmController = new FilmController(new FilmService(new InMemoryFilmStorage()));
         film = new Film("Name1", "Description1",
                 LocalDate.of(2022, 5, 29), Duration.ofSeconds(1000));
     }
+
     @Test
     @DisplayName(value = "Проверка создания фильма с корректными данными")
     public void addFilmValidData() {
