@@ -53,7 +53,7 @@ public class UserService {
         User user = inMemoryUserStorage.getUserById(idUser);
         ArrayList<User> friends = new ArrayList<>();
         for (long part : user.getFriends()) {
-            User listUser = getUserById((int) part);
+            User listUser = inMemoryUserStorage.getUserById((int) part);
             friends.add(listUser);
         }
         return friends;
