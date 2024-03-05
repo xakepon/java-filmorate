@@ -1,98 +1,74 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.validate.ValidException;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 
 import java.util.*;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class UserService {
-    private final Map<Integer, User> users = new HashMap<>();
-    private int userId = 0;
 
-    public void addUser(User user) throws ValidException {
-        checkUser(user);
-        user.setId(++userId);
-        users.put(user.getId(), user);
+    private final InMemoryUserStorage inMemoryUserStorage;
+
+    public User addUser(User user) {
+        return inMemoryUserStorage.addUser(user);
     }
 
-    public void updateUser(User user) throws ValidException {
-        checkUser(user);
-        users.put(user.getId(), user);
+    public User updateUser(User user) {
+        return inMemoryUserStorage.updateUser(user);
     }
 
-    public List<User> getAllUsers() {
-        return List.copyOf(users.values());
+    public ArrayList<User> getAllUsers() {
+        return inMemoryUserStorage.getAllUsers();
     }
 
-    public User getUserById(int userId) {
-        return users.get(userId);
+    public User getUserById(int idUser) {
+        return inMemoryUserStorage.getUserById(idUser);
     }
 
-    public void addFriend(int userId, int friendId) {
-        log.info("Пользователь {} добавил {} в список друзей.", userId, friendId);
-        User user1 = users.get(userId);
-        User user2 = users.get(friendId);
-        user1.addFriend(friendId);
-        user2.addFriend(userId);
+    public void addFriend(int idUser, int idFriend) {
+        log.info("Пользователь {} добавил {} в список друзей.", idUser, idFriend);
+        User user = inMemoryUserStorage.getUserById(idUser);
+        User friend = inMemoryUserStorage.getUserById(idFriend);
+        user.addFriend(idFriend);
+        friend.addFriend(idUser);
     }
 
 
-    public void delFriend(int userId, int friendId) {
-        log.info("Пользователь {} удалил {} из списка друзей.", userId, friendId);
-        User user1 = users.get(userId);
-        User user2 = users.get(friendId);
-        user1.delFriend(friendId);
-        user2.delFriend(userId);
+    public void delFriend(int idUser, int idFriend) {
+        log.info("Пользователь {} удалил {} из списка друзей.", idUser, idFriend);
+        User user = inMemoryUserStorage.getUserById(idUser);
+        User friend = inMemoryUserStorage.getUserById(idFriend);
+        user.delFriend(idFriend);
+        friend.delFriend(idUser);
     }
 
-    public ArrayList<User> getFriends(int userId) {
-        User user = users.get(userId);
+    public ArrayList<User> getFriends(int idUser) {
+        User user = inMemoryUserStorage.getUserById(idUser);
         ArrayList<User> friends = new ArrayList<>();
-        for (long element : user.getFriends()) {
-            User listUser = getUserById((int) element);
+        for (long part : user.getFriends()) {
+            User listUser = getUserById((int) part);
             friends.add(listUser);
         }
         return friends;
     }
 
-    public ArrayList<User> getMutualFriends(int firstUserId, int secondUserId) {
-        User user1 = users.get(firstUserId);
-        User user2 = users.get(secondUserId);
-        Set<Long> commonElements = new HashSet<>(user1.getFriends());
-        commonElements.retainAll(user2.getFriends());
-        ArrayList<User> mutualFriends = new ArrayList<>();
-        for (long element : commonElements) {
-            User user = users.get((int) element);
-            mutualFriends.add(user);
+    public ArrayList<User> getLargeFriends(int idUser1, int idUser2) {
+        User user1 = inMemoryUserStorage.getUserById(idUser1);
+        User user2 = inMemoryUserStorage.getUserById(idUser2);
+        Set<Long> set = new HashSet<>(user1.getFriends());
+        set.retainAll(user2.getFriends());
+        ArrayList<User> largeFriends = new ArrayList<>();
+        for (long part : set) {
+            User user = inMemoryUserStorage.getUserById((int) part);
+            largeFriends.add(user);
         }
-        return mutualFriends;
-    }
-
-    private void checkUser(User user) throws ValidException {
-        for (User mails : users.values()) {
-            if (Objects.equals(mails.getEmail(), user.getEmail())) {
-                log.info("Пользователь с такой почтой уже существует");
-                throw new ValidException("Пользователь с такой почтой уже существует");
-            }
-        }
-        if (user.getLogin().contains(" ")) {
-            log.info("Логин не должен содержать пробелов");
-            throw new ValidException("Логин не олжен быть пустым и содержать пробелов");
-        }
-        if (!user.getEmail().matches("^[a-zA-Z0-9_+&*-]+(?:" +
-                "\\.[a-zA-Z0-9_+&*-]+)*" + "@(?:[a-zA-Z0-9-]+" +
-                "\\.)+[a-zA-Z]{2,7}$")) {
-            log.info("Ошибка проверки электронной почты");
-            throw new ValidException("Ошибка проверки электронной почты");
-        }
-        if (user.getName() == null || user.getName().trim().isEmpty()) {
-            log.info("Поле имени не может быть пустым");
-            user.setName(user.getLogin());
-        }
+        return largeFriends;
     }
 }

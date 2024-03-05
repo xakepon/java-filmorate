@@ -1,14 +1,14 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.validate.ValidException;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 @Component
@@ -20,8 +20,8 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User addUser(User user) throws ValidException {
         checkUser(user);
-        user.setId(++userId);
-        users.put(user.getId(), user);
+        user.setUserID(++userId);
+        users.put(user.getUserID(), user);
         log.debug("Пользовтель успешно добавлен");
         return user;
     }
@@ -29,20 +29,20 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User updateUser(User user) throws ValidException {
         checkUser(user);
-        users.put(user.getId(), user);
+        users.put(user.getUserID(), user);
         log.debug("Пользовтель успешно обновлен");
         return user;
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public ArrayList<User> getAllUsers() {
         log.debug("Список всех пользователей получен");
-        return List.copyOf(users.values());
+        return (ArrayList<User>) List.copyOf(users.values());
     }
 
     @Override
-    public List<User> getFriends() {
-        return null;
+    public User getUserById(int userId) {
+        return Optional.ofNullable(users.get(userId)).orElseThrow(() ->new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь не найден"));
     }
 
     private void checkUser(User user) throws ValidException {

@@ -1,84 +1,65 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.validate.ValidException;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")
 @Slf4j
+@RequiredArgsConstructor
 public class UserController {
-    private final UserService userService = new UserService();
+
+    private final UserService userService;
 
     //создание пользователя
     @PostMapping
-    public ResponseEntity<User> addUser(@Validated @RequestBody User user) {
-        try {
-            userService.addUser(user);
-            log.info("Пользователь " + user.getName() + " добавлен");
-            return new ResponseEntity<>(user, HttpStatus.CREATED);
-        } catch (ValidException e) {
-            log.info(e.getMessage());
-            return new ResponseEntity<>(user, HttpStatus.BAD_REQUEST);
-        }
+    public User addUser(@Valid @RequestBody User user) {
+        return userService.addUser(user);
     }
 
     //обновление пользователя
     @PutMapping
-    public ResponseEntity<User> updateUser(@Validated @RequestBody User user) {
-        try {
-            userService.updateUser(user);
-            log.info("Пользователь " + user.getName() + " обновлен");
-            return new ResponseEntity<>(user, HttpStatus.OK);
-        } catch (ValidException e) {
-            log.info(e.getMessage());
-            return new ResponseEntity<>(user, HttpStatus.NOT_FOUND);
-        }
+    public User updateUser(@Valid @RequestBody User user) {
+        return userService.updateUser(user);
     }
 
     //получение списка всех пользователей
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        log.info("Получен список всех пользователей");
-        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
+    public ArrayList<User> getAllUsers() {
+        return userService.getAllUsers();
     }
 
-    @GetMapping("/{userId}")
-    public User getUser(@PathVariable int userId) {
-        return userService.getUserById(userId);
+    @GetMapping("/{idUser}")
+    public User getUser(@PathVariable int idUser) {
+        return userService.getUserById(idUser);
     }
 
-    @PutMapping("/{userId}/friends/{friendId}")
-    public void addFriend(@PathVariable int userId,
-                          @PathVariable int friendId) {
-        userService.addFriend(userId, friendId);
+    @PutMapping("/{idUser}/friends/{idFriend}")
+    public void addFriend(@PathVariable int idUser,
+                          @PathVariable int idFriend) {
+        userService.addFriend(idUser, idFriend);
     }
 
-    @DeleteMapping("/{userId}/friends/{friendId}")
-    public void deleteFriend(@PathVariable int userId,
-                             @PathVariable int friendId) {
-        userService.delFriend(userId, friendId);
+    @DeleteMapping("/{idUser}/friends/{idFriend}")
+    public void deleteFriend(@PathVariable int idUser,
+                             @PathVariable int idFriend) {
+        userService.delFriend(idUser, idFriend);
     }
 
-    @GetMapping("/{userId}/friends")
-    public ArrayList<User> getFriends(@PathVariable int userId) {
-        return userService.getFriends(userId);
+    @GetMapping("/{idUser}/friends")
+    public ArrayList<User> getFriends(@PathVariable int idUser) {
+        return userService.getFriends(idUser);
     }
 
-    @GetMapping("/{userId}/friends/common/{otherId}")
-    public ArrayList<User> getMutualFriends(@PathVariable int userId,
-                                            @PathVariable int otherId) {
-        return userService.getMutualFriends(userId, otherId);
+    @GetMapping("/{idUser}/friends/common/{idOther}")
+    public ArrayList<User> getMutualFriends(@PathVariable int idUser,
+                                            @PathVariable int idOther) {
+        return userService.getLargeFriends(idUser, idOther);
     }
-
-
-
 }

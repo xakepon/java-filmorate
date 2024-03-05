@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.controller.MyDurationSerializer;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import java.time.Duration;
@@ -18,12 +19,9 @@ import java.util.Set;
  */
 
 @Data
-@RequiredArgsConstructor
-@EqualsAndHashCode
 public class Film {
-
     @NonNull
-    private int id; // целочисленный идентификатор фильма
+    private int idFilm; // целочисленный идентификатор фильма
 
     @NonNull
     @NotNull(message = "название фильма не null")
@@ -40,18 +38,29 @@ public class Film {
     private LocalDate releaseDate; // дата релиза фильма
 
     @NonNull
+    @Positive
     @NotNull(message = "продолжительность фильма не null")
     @JsonSerialize(using = MyDurationSerializer.class)
-    private Duration duration; // продолжительность ф'ильма
+    private Duration duration; // продолжительность фильма
 
     private Set<Long> likes = new HashSet<>();
 
-    public void setLike(long id) {
-        likes.add(id);
+    private static int countOfFilm = 0;
+    public Film(String name, String description, LocalDate releaseDate, Duration duration) {
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+    }
+    public void setLike(long idUser) {
+        likes.add(idUser);
     }
 
-    public void delLike(long id) {
-        likes.remove(id);
+    public void delLike(long idUser) {
+        likes.remove(idUser);
     }
 
+    public int getcountFilm() {
+        return ++countOfFilm;
+    }
 }

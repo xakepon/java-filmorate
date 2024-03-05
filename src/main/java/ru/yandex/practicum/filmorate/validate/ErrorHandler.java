@@ -16,7 +16,7 @@ import java.util.Map;
 public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleValidationException(final ValidException e) {
+    public Map<String, String> handleValidationException(final ValidationException e) {
         return Map.of("error", e.getMessage());
     }
 
@@ -52,7 +52,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Map<String, String> handleUnknownUpdateException(final ValidationException e) {
+    public Map<String, String> handleUnknownUpdateException(final ValidException e) {
         return Map.of("error", e.getMessage());
     }
 
