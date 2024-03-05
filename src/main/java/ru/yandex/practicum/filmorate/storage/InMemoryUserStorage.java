@@ -36,7 +36,13 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public ArrayList<User> getAllUsers() {
         log.debug("Список всех пользователей получен");
-        return (ArrayList<User>) List.copyOf(users.values());
+        ArrayList<User> newUsers = new ArrayList<User>();
+        Iterator<Map.Entry<Integer, User>> iterator = users.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Integer, User> entry = iterator.next();
+            newUsers.add(entry.getValue());
+        }
+        return newUsers;
     }
 
     @Override

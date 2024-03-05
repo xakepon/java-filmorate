@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.validate.ValidException;
 
 import java.time.LocalDate;
@@ -43,7 +44,14 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public ArrayList<Film> getAllFilms() {
         log.debug("Список всех фильмов получен");
-        return (ArrayList<Film>) List.copyOf(films.values());
+        ArrayList<Film> newFilms = new ArrayList<Film>();
+        Iterator<Map.Entry<Integer, Film>> iterator = films.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Integer, Film> entry = iterator.next();
+            newFilms.add(entry.getValue());
+        }
+        return newFilms;
+       // return (ArrayList<Film>) List.copyOf(films.values());
     }
 
     @Override
