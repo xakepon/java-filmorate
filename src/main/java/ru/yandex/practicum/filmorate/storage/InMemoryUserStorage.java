@@ -19,8 +19,8 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User addUser(User user) throws ValidException {
         checkUser(user);
-        user.setUserID(++userId);
-        users.put(user.getUserID(), user);
+        user.setId(++userId);
+        users.put(user.getId(), user);
         log.debug("Пользовтель успешно добавлен");
         return user;
     }
@@ -28,7 +28,7 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User updateUser(User user) throws ValidException {
         checkUser(user);
-        users.put(user.getUserID(), user);
+        users.put(user.getId(), user);
         log.debug("Пользовтель успешно обновлен");
         return user;
     }

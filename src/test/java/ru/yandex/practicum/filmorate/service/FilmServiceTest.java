@@ -22,7 +22,7 @@ public class FilmServiceTest {
                 Duration.ofSeconds(1000));
         InMemoryFilmStorage inMemoryFilmStorage = new InMemoryFilmStorage();
         inMemoryFilmStorage.addFilm(film);
-        Film savedFilm = inMemoryFilmStorage.getFilmById(film.getIdFilm());
+        Film savedFilm = inMemoryFilmStorage.getFilmById(film.getId());
         assertThat(savedFilm)
                 .isNotNull()
                 .usingRecursiveComparison()
