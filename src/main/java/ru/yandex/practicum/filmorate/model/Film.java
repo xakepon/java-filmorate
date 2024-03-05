@@ -37,7 +37,6 @@ public class Film {
     private LocalDate releaseDate; // дата релиза фильма
 
     @NonNull
-    //@Positive
     @NotNull(message = "продолжительность фильма не null")
     @JsonSerialize(using = MyDurationSerializer.class)
     private Duration duration; // продолжительность фильма
