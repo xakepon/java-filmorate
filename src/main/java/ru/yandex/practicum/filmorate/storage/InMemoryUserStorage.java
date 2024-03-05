@@ -41,7 +41,7 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User getUserById(int userId) {
-        return Optional.ofNullable(users.get(userId)).orElseThrow(() ->new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь не найден"));
+        return Optional.ofNullable(users.get(userId)).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь не найден"));
     }
 
     private void checkUser(User user) throws ValidException {
