@@ -15,9 +15,9 @@ import java.util.*;
 @AllArgsConstructor
 public class FilmService {
 
-    private final InMemoryFilmStorage inMemoryFilmStorage;;
+    private final InMemoryFilmStorage inMemoryFilmStorage;
 
-    public Film addFilm(Film film){
+    public Film addFilm(Film film) {
        return inMemoryFilmStorage.addFilm(film);
     }
 
