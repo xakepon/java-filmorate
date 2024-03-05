@@ -21,7 +21,7 @@ class UserControllerTest {
     @Test
     @DisplayName(value = "Проверка создания пользователя с корректными данными")
     public void addUserValidData() {
-        User user = new User( "example@example.com", "example", "Name1",
+        User user = new User("example@example.com", "example", "Name1",
                 LocalDate.of(2019,6,29));
 
         ResponseEntity<User> response = restTemplate.postForEntity("/users", user, User.class);
