@@ -19,21 +19,22 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
-//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class FilmControllerTest {
-
+    FilmController filmController;
+    Film film;
     @Autowired
     private TestRestTemplate restTemplate;
-    
-    FilmController filmController = new FilmController(new FilmService(new InMemoryFilmStorage()));
-
+    @BeforeEach
+            void setUp() {
+        filmController = new FilmController(new FilmService(new InMemoryFilmStorage()));
+        film = new Film("Name1", "Description1",
+                LocalDate.of(2022, 5, 29), Duration.ofSeconds(1000));
+    }
     @Test
     @DisplayName(value = "Проверка создания фильма с корректными данными")
     public void addFilmValidData() {
 
-        Film film = new Film("Name1", "Description1",
-                LocalDate.of(2022, 5, 29), Duration.ofSeconds(1000));
         filmController.addFilm(film);
         ResponseEntity<Film> response = restTemplate.postForEntity("/films", film, Film.class);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
