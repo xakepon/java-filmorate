@@ -50,7 +50,6 @@ public class InMemoryFilmStorage implements FilmStorage {
             newFilms.add(entry.getValue());
         }
         return newFilms;
-       // return (ArrayList<Film>) List.copyOf(films.values());
     }
 
     @Override
