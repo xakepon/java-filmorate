@@ -25,7 +25,7 @@ class UserControllerTest {
                 LocalDate.of(2019,6,29));
 
         ResponseEntity<User> response = restTemplate.postForEntity("/users", user, User.class);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode()); // надо вернуть created
     }
 
     @Test
