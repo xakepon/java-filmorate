@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.controller.MyDurationSerializer;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import java.time.Duration;
@@ -37,7 +38,7 @@ public class Film {
     private LocalDate releaseDate; // дата релиза фильма
 
     @NonNull
-    //@Positive
+    @Positive
     @NotNull(message = "продолжительность фильма не null")
     @JsonSerialize(using = MyDurationSerializer.class)
     private Duration duration; // продолжительность фильма
