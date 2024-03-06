@@ -43,10 +43,10 @@ public class UserService {
 
     public void delFriend(int idUser, int idFriend) {
         log.info("Пользователь {} удалил {} из списка друзей.", idUser, idFriend);
-        User user = inMemoryUserStorage.getUserById(idUser);
-        User friend = inMemoryUserStorage.getUserById(idFriend);
-        user.delFriend(idFriend);
-        friend.delFriend(idUser);
+        User user1 = inMemoryUserStorage.getUserById(idUser);
+        User user2 = inMemoryUserStorage.getUserById(idFriend);
+        user1.delFriend(idFriend);
+        user2.delFriend(idUser);
     }
 
     public ArrayList<User> getFriends(int idUser) {
