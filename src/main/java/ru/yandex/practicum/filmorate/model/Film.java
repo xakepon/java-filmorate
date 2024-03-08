@@ -52,7 +52,7 @@ public class Film {
         this.duration = duration;
     }
 
-    public Set<Long> getLikes(){
+    public Set<Long> getLikes() {
         Set<Long> newLikes = likes;
         return newLikes;
     }
