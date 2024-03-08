@@ -48,7 +48,7 @@ public class User {
         this.birthday = birthday;
     }
 
-    public Set<Long> getFriends(){
+    public Set<Long> getFriends() {
         Set<Long> newFriends = friends;
         return newFriends;
     }
