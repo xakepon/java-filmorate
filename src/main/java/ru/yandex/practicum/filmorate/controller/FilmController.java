@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -32,8 +31,8 @@ public class FilmController {
 
     // получение всех фильмов
     @GetMapping
-    public ArrayList<Film> getAllFilms() {
-        return (ArrayList<Film>) filmService.getAllFilms();
+    public List<Film> getAllFilms() {
+        return filmService.getAllFilms();
     }
 
     @GetMapping("/{id}")
@@ -44,7 +43,7 @@ public class FilmController {
     @PutMapping("/{idFilm}/like/{idUser}")
     public void giveFilmLike(@PathVariable int idFilm,
                                @PathVariable int idUser) {
-        filmService.gettingLike(idUser, idFilm);
+        filmService.settingLike(idUser, idFilm);
     }
 
     @DeleteMapping("/{idFilm}/like/{idUser}")
@@ -55,7 +54,7 @@ public class FilmController {
 
     @GetMapping("/popular")
     public List<Film> getBestFilms(
-            @RequestParam(value = "count", defaultValue = "10", required = false) Integer count) {
+            @RequestParam(defaultValue = "10") Integer count) {
         return filmService.getLargeLikedFilms(count);
     }
 

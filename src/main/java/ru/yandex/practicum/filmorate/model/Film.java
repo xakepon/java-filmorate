@@ -52,6 +52,11 @@ public class Film {
         this.duration = duration;
     }
 
+    public Set<Long> getLikes(){
+        Set<Long> newLikes = likes;
+        return newLikes;
+    }
+
     public void setLike(long idUser) {
         likes.add(idUser);
     }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.validate.ValidException;
 
 import java.util.*;
 
@@ -33,17 +34,17 @@ public class FilmService {
         return inMemoryFilmStorage.getFilmById(filmId);
     }
 
-    public void gettingLike(int idUser, int idFilm) {
+    public void settingLike(int idUser, int idFilm) {
         log.info("Gользователь {} пытается поставить лайк фильму {}", idUser, idFilm);
         Film film = getFilmById(idFilm);
         if (film.getLikes()
                 .stream()
-                .anyMatch(id -> id == idUser)) {
-            log.info("Пользователь {} не смог поставил лайк фильму {}", idUser, idFilm);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Фильм не был найден");
-        } else {
+                .noneMatch(id -> id == idUser)) {
             film.setLike(idUser);
             log.info("Пользователь {} поставил лайк фильму {}", idUser, idFilm);
+        } else {
+            log.info("Пользователь {} не смог поставил лайк фильму {}, так как лайк уже стоит", idUser, idFilm);
+            throw new ValidException("Лайк уже стоит");
         }
     }
 
@@ -56,8 +57,8 @@ public class FilmService {
             film.delLike(idUser);
             log.info("Пользователь {} убрал лайк у фильма {}", idUser, idFilm);
         } else {
-            log.info("Пользователь {} не смог убрать лайк у фильма {}", idUser, idFilm);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Фильм не найден");
+            log.info("Пользователь {} не ставил лайк к фильма {}", idUser, idFilm);
+            throw new ValidException("Фильм не найден");
         }
     }
 
