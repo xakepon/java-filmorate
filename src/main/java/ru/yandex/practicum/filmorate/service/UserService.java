@@ -1,55 +1,74 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.validate.ValidException;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
+@Service
+@AllArgsConstructor
 public class UserService {
-    private final Map<Integer, User> users = new HashMap<>();
-    private int userId = 0;
 
-    public List<User> getAllUsers() {
-        return List.copyOf(users.values());
+    private final InMemoryUserStorage inMemoryUserStorage;
+
+    public User addUser(User user) {
+        return inMemoryUserStorage.addUser(user);
     }
 
-    public void addUser(User user) throws ValidException {
-        checkUser(user);
-        user.setId(++userId);
-        users.put(user.getId(), user);
+    public User updateUser(User user) {
+        return inMemoryUserStorage.updateUser(user);
     }
 
-    public void updateUser(User user) throws ValidException {
-        checkUser(user);
-        users.put(user.getId(), user);
+    public ArrayList<User> getAllUsers() {
+        return inMemoryUserStorage.getAllUsers();
     }
 
-    private void checkUser(User user) throws ValidException {
-        for (User mails : users.values()) {
-            if (Objects.equals(mails.getEmail(), user.getEmail())) {
-                log.info("Пользователь с такой почтой уже существует");
-                throw new ValidException("Пользователь с такой почтой уже существует");
-            }
+    public User getUserById(int idUser) {
+        return inMemoryUserStorage.getUserById(idUser);
+    }
+
+    public void addFriend(int idUser, int idFriend) {
+        log.info("Пользователь {} добавил {} в список друзей.", idUser, idFriend);
+        User user = inMemoryUserStorage.getUserById(idUser);
+        User friend = inMemoryUserStorage.getUserById(idFriend);
+        user.addFriend(idFriend);
+        friend.addFriend(idUser);
+    }
+
+
+    public void delFriend(int idUser, int idFriend) {
+        log.info("Пользователь {} удалил {} из списка друзей.", idUser, idFriend);
+        User user1 = inMemoryUserStorage.getUserById(idUser);
+        User user2 = inMemoryUserStorage.getUserById(idFriend);
+        user1.delFriend(idFriend);
+        user2.delFriend(idUser);
+    }
+
+    public ArrayList<User> getFriends(int idUser) {
+        User user = inMemoryUserStorage.getUserById(idUser);
+        ArrayList<User> friends = new ArrayList<>();
+        for (long part : user.getFriends()) {
+            User listUser = inMemoryUserStorage.getUserById(Math.toIntExact(part));
+            friends.add(listUser);
         }
-        if (user.getLogin().contains(" ")) {
-            log.info("Логин не должен содержать пробелов");
-            throw new ValidException("Логин не олжен быть пустым и содержать пробелов");
+        return friends;
+    }
+
+    public ArrayList<User> getLargeFriends(int idUser1, int idUser2) {
+        User user1 = inMemoryUserStorage.getUserById(idUser1);
+        User user2 = inMemoryUserStorage.getUserById(idUser2);
+        Set<Long> set = new HashSet<>(user1.getFriends());
+        set.retainAll(user2.getFriends());
+        ArrayList<User> largeFriends = new ArrayList<>();
+        for (long part : set) {
+            User user = inMemoryUserStorage.getUserById((int) part);
+            largeFriends.add(user);
         }
-        if (!user.getEmail().matches("^[a-zA-Z0-9_+&*-]+(?:" +
-                "\\.[a-zA-Z0-9_+&*-]+)*" + "@(?:[a-zA-Z0-9-]+" +
-                "\\.)+[a-zA-Z]{2,7}$")) {
-            log.info("Ошибка проверки электронной почты");
-            throw new ValidException("Ошибка проверки электронной почты");
-        }
-        if (user.getName() == null || user.getName().trim().isEmpty()) {
-            log.info("Поле имени не может быть пустым");
-            user.setName(user.getLogin());
-        }
+        return largeFriends;
     }
 }

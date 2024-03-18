@@ -1,50 +1,70 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.validate.ValidException;
 
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
+@Service
+@AllArgsConstructor
 public class FilmService {
-    private final Map<Integer, Film> films = new HashMap<>();
-    private int filmID = 0;
 
-    public List<Film> getAllFilms() {
-        return List.copyOf(films.values());
+    private final InMemoryFilmStorage inMemoryFilmStorage;
+
+    public Film addFilm(Film film) {
+       return inMemoryFilmStorage.addFilm(film);
     }
 
-    public void addFilm(Film film) throws ValidException {
-        checkFilm(film);
-        film.setId(++filmID);
-        films.put(film.getId(), film);
+    public Film updateFilm(Film film) {
+     return inMemoryFilmStorage.updateFilm(film);
     }
 
-    public void updateFilm(Film film) throws ValidException {
-        if (!films.containsKey(film.getId())) {
-            log.warn("Фильм с айди {} не найден", film.getId());
-            throw new ValidException("Фильм с айди не найден");
-        }
-        checkFilm(film);
-        films.put(film.getId(), film);
+    public ArrayList<Film> getAllFilms() {
+        return inMemoryFilmStorage.getAllFilms();
     }
 
-    private void checkFilm(Film film) throws ValidException {
-        if (films.containsValue(film)) {
-            log.info("Ошибка проверки фильма " + film.getName() + ". Фильм уже добавлен в пееречень");
-            throw new ValidException("Фильм уже добавлен в перечень");
+    public Film getFilmById(int filmId) {
+        return inMemoryFilmStorage.getFilmById(filmId);
+    }
+
+    public void settingLike(int idUser, int idFilm) {
+        log.info("Gользователь {} пытается поставить лайк фильму {}", idUser, idFilm);
+        Film film = getFilmById(idFilm);
+        if (film.getLikes()
+                .stream()
+                .noneMatch(id -> id == idUser)) {
+            film.setLike(idUser);
+            log.info("Пользователь {} поставил лайк фильму {}", idUser, idFilm);
+        } else {
+            log.info("Пользователь {} не смог поставил лайк фильму {}, так как лайк уже стоит", idUser, idFilm);
+            throw new ValidException("Лайк уже стоит");
         }
-        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
-            log.info("Дата фильма " + film.getName() + " выходит за текущую дату в будущее");
-            throw new ValidException("Дата выхода фильма не корректная, из будущего");
+    }
+
+    public void delLike(int idUser, int idFilm) {
+        log.info("Попытка пользователя {} удалить лайк у фильма {}", idUser, idFilm);
+        Film film = getFilmById(idFilm);
+        if (film.getLikes()
+                .stream()
+                .anyMatch(id -> id == idUser)) {
+            film.delLike(idUser);
+            log.info("Пользователь {} убрал лайк у фильма {}", idUser, idFilm);
+        } else {
+            log.info("Пользователь {} не ставил лайк к фильма {}", idUser, idFilm);
+            throw new ValidException("Фильм не найден");
         }
-        if (film.getDuration().getSeconds() <= 0) {
-            log.info("Продолжительность фильма " + film.getName() + " не положительное число");
-            throw new ValidException("Продолжительность фильма не положительное число");
-        }
+    }
+
+    public List<Film> getLargeLikedFilms(int count) {
+        log.info("Вывод самых {} популярных фильмов", count);
+        ArrayList<Film> films = getAllFilms();
+        Collections.sort(films,
+                Comparator.comparingInt((Film film) -> film.getLikes().size()).reversed());
+        return films.subList(0, Math.min(films.size(), count));
     }
 }

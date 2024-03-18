@@ -1,53 +1,61 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.validate.ValidException;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/films")
+@RequestMapping("/films")
 @Slf4j
+@RequiredArgsConstructor
 public class FilmController {
-    private final FilmService filmService = new FilmService();
+
+    private final FilmService filmService;
 
     // добавление фильма
     @PostMapping
-    public ResponseEntity<Film> addFilm(@Validated @RequestBody Film film) {
-        try {
-            filmService.addFilm(film);
-            log.info("Добавлен фильм " + film.getName());
-            return new ResponseEntity<>(film, HttpStatus.CREATED);
-        } catch (ValidException e) {
-            log.info(e.getMessage());
-            return new ResponseEntity<>(film, HttpStatus.BAD_REQUEST);
-        }
+    public Film addFilm(@Valid @RequestBody Film film) {
+        return filmService.addFilm(film);
     }
 
     // обновление фильма;
     @PutMapping
-    public ResponseEntity<Film> updateFilm(@Validated @RequestBody Film film) {
-        try {
-            filmService.updateFilm(film);
-            log.info("Фильм " + film.getName() + " обновлен");
-            return new ResponseEntity<>(film, HttpStatus.OK);
-        } catch (ValidException e) {
-            log.info(e.getMessage());
-            return new ResponseEntity<>(film, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public Film updateFilm(@Valid @RequestBody Film film) {
+        return filmService.updateFilm(film);
     }
 
     // получение всех фильмов
     @GetMapping
-    public ResponseEntity<List<Film>> getAllFilms() {
-        log.info("Список всех фильмов получен");
-        return new ResponseEntity<>(filmService.getAllFilms(), HttpStatus.OK);
+    public List<Film> getAllFilms() {
+        return filmService.getAllFilms();
+    }
+
+    @GetMapping("/{id}")
+    public Film getFilm(@PathVariable int id) {
+        return filmService.getFilmById(id);
+    }
+
+    @PutMapping("/{idFilm}/like/{idUser}")
+    public void giveFilmLike(@PathVariable int idFilm,
+                               @PathVariable int idUser) {
+        filmService.settingLike(idUser, idFilm);
+    }
+
+    @DeleteMapping("/{idFilm}/like/{idUser}")
+    public void delLike(@PathVariable int idFilm,
+                           @PathVariable int idUser) {
+        filmService.delLike(idUser, idFilm);
+    }
+
+    @GetMapping("/popular")
+    public List<Film> getBestFilms(
+            @RequestParam(defaultValue = "10") Integer count) {
+        return filmService.getLargeLikedFilms(count);
     }
 
 }
