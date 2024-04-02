@@ -53,8 +53,8 @@ public class Film {
     }
 
     public Set<Long> getLikes() {
-        Set<Long> newLikes = likes;
-        return newLikes;
+        //Set<Long> newLikes = likes;
+        return Set.copyOf(likes);
     }
 
     public void setLike(long idUser) {

@@ -37,13 +37,12 @@ public class FilmService {
         Film film = getFilmById(idFilm);
         if (film.getLikes()
                 .stream()
-                .noneMatch(id -> id == idUser)) {
-            film.setLike(idUser);
-            log.info("Пользователь {} поставил лайк фильму {}", idUser, idFilm);
-        } else {
+                .anyMatch(id -> id == idUser)) {
             log.info("Пользователь {} не смог поставил лайк фильму {}, так как лайк уже стоит", idUser, idFilm);
             throw new ValidException("Лайк уже стоит");
         }
+        film.setLike(idUser);
+            log.info("Пользователь {} поставил лайк фильму {}", idUser, idFilm);
     }
 
     public void delLike(int idUser, int idFilm) {

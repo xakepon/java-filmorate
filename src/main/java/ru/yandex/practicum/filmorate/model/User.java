@@ -47,10 +47,8 @@ public class User {
         this.name = name;
         this.birthday = birthday;
     }
-
     public Set<Long> getFriends() {
-        Set<Long> newFriends = friends;
-        return newFriends;
+       return Set.copyOf(friends);
     }
 
     public void addFriend(long id) {
