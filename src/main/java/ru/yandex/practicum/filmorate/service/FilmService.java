@@ -56,7 +56,7 @@ public class FilmService {
         film.setLikes(likes);
         if (film.getLikes()
                 .stream()
-                .anyMatch(id -> id == idUser)&& idUser > 0 || film.getLikes().isEmpty()) {
+                .anyMatch(id -> id == idUser) && idUser > 0 || film.getLikes().isEmpty()) {
             filmDBStorage.deleteLike(idUser, idFilm);
             log.info("Пользователь {} убрал лайк у фильма {}", idUser, idFilm);
             filmDBStorage.updateFilm(film);
