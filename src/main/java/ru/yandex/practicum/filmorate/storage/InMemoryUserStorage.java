@@ -50,6 +50,16 @@ public class InMemoryUserStorage implements UserStorage {
         return Optional.ofNullable(users.get(userId)).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь не найден"));
     }
 
+    @Override
+    public HashMap<Integer, String> addFriend(int userId, int friendId) {
+        return null;
+    }
+
+    @Override
+    public HashMap<Integer, String> deleteFriend(int userId, int friendId) {
+        return null;
+    }
+
     private void checkUser(User user) throws ValidException {
         for (User mails : users.values()) {
             if (Objects.equals(mails.getEmail(), user.getEmail())) {

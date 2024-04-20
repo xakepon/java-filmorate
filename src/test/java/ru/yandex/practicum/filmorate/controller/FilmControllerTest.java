@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.FilmDBStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
 import java.time.Duration;
@@ -23,12 +24,12 @@ class FilmControllerTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @BeforeEach
+    /*@BeforeEach
     void setUp() {
-        filmController = new FilmController(new FilmService(new InMemoryFilmStorage()));
+        filmController = new FilmController(new FilmService(new FilmDBStorage()));
         film = new Film("Name1", "Description1",
                 LocalDate.of(2022, 5, 29), Duration.ofSeconds(1000));
-    }
+    }*/
 
     @Test
     @DisplayName(value = "Проверка создания фильма с корректными данными")

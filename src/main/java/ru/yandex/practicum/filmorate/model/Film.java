@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 import ru.yandex.practicum.filmorate.controller.MyDurationSerializer;
@@ -44,6 +45,11 @@ public class Film {
     private Set<Long> likes = new HashSet<>();
 
     private static int countOfFilm = 0;
+
+    @JsonProperty("mpa")
+    private Mpa mpa;
+    @JsonProperty("genres")
+    private Set<Genre> genres = new HashSet<>();
 
     public Film(String name, String description, LocalDate releaseDate, Duration duration) {
         this.name = name;

@@ -8,7 +8,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Data
@@ -39,7 +41,8 @@ public class User {
 
     private static int countOfUser = 0;
 
-    private Set<Long> friends = new HashSet<>();
+    //private Set<Long> friends = new HashSet<>();
+    private Map<Integer, String> friends = new HashMap<>();
 
     public User(String email, String login, String name, LocalDate birthday) {
         this.email = email;
@@ -47,11 +50,14 @@ public class User {
         this.name = name;
         this.birthday = birthday;
     }
-    public Set<Long> getFriends() {
+    /* public Set<Long> getFriends() {
        return Set.copyOf(friends);
+    } */
+    public Map<Integer, String> getFriends(){
+        return Map.copyOf(friends);
     }
 
-    public void addFriend(long id) {
+   /* public void addFriend(long id) {
         friends.add(id);
     }
 
@@ -61,5 +67,5 @@ public class User {
 
     public int getCountOfUser() {
         return ++countOfUser;
-    }
+    }*/
 }

@@ -57,6 +57,41 @@ public class InMemoryFilmStorage implements FilmStorage {
         return Optional.ofNullable(films.get(idFilm)).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Фильм не найден"));
     }
 
+    @Override
+    public void deleteFilm(int filmId) {
+
+    }
+
+    @Override
+    public Map<Integer, String> getMpa() {
+        return null;
+    }
+
+    @Override
+    public Map<Integer, String> getMpaById(int genreId) {
+        return null;
+    }
+
+    @Override
+    public Map<Integer, String> getGenres() {
+        return null;
+    }
+
+    @Override
+    public Map<Integer, String> getGenreById(int genreId) {
+        return null;
+    }
+
+    @Override
+    public Set<Integer> giveLike(int userId, int filmId) {
+        return null;
+    }
+
+    @Override
+    public Set<Integer> deleteLike(int userId, int filmId) {
+        return null;
+    }
+
     private void checkFilm(Film film) throws ValidException {
         if (films.containsValue(film)) {
             log.info("Ошибка проверки фильма " + film.getName() + ". Фильм уже добавлен в пееречень");
