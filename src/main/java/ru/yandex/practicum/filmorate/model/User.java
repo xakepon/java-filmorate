@@ -10,6 +10,7 @@ import javax.validation.constraints.Past;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+
 @Data
 @Validated
 public class User {
@@ -50,7 +51,8 @@ public class User {
     /* public Set<Long> getFriends() {
        return Set.copyOf(friends);
     } */
-    public Map<Integer, String> getFriends(){
+
+    public Map<Integer, String> getFriends() {
         return Map.copyOf(friends);
     }
 
