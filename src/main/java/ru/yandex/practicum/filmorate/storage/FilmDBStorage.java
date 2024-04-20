@@ -12,18 +12,16 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
-import ru.yandex.practicum.filmorate.validate.ValidException;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.util.*;
 
 @Slf4j
 @Component
-public class FilmDBStorage implements FilmStorage{
+public class FilmDBStorage implements FilmStorage {
 
     private final JdbcTemplate jdbcTemplate;
 
