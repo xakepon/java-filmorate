@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmDBStorage;
-import ru.yandex.practicum.filmorate.validate.ValidException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
@@ -58,7 +57,6 @@ public class FilmService {
         if (film.getLikes()
                 .stream()
                 .anyMatch(id -> id == idUser)&& idUser > 0 || film.getLikes().isEmpty()) {
-            //film.delLike(idUser);
             filmDBStorage.deleteLike(idUser, idFilm);
             log.info("Пользователь {} убрал лайк у фильма {}", idUser, idFilm);
             filmDBStorage.updateFilm(film);
