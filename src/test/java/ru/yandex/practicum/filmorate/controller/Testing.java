@@ -11,14 +11,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import ru.yandex.practicum.filmorate.storage.FilmDBStorage;
 
-import java.time.LocalDate;
-import java.util.HashSet;
-
 import static org.assertj.core.api.Assertions.assertThat;
-
-
-
-
 
 @JdbcTest
 @RequiredArgsConstructor(onConstructor_ = @Autowired)

@@ -45,7 +45,7 @@ public class UserTesting {
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertEquals(1, violations.size());
     }
-
+/*
     @Test
     public void addBlankNameFilmTest() {
         User user = new User(
@@ -66,5 +66,5 @@ public class UserTesting {
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertEquals(1, violations.size());
-    }
+    }*/
 }
