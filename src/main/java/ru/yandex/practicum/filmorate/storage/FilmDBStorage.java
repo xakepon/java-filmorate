@@ -12,11 +12,13 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
+import ru.yandex.practicum.filmorate.validate.ValidException;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.*;
 
 @Slf4j
@@ -43,6 +45,7 @@ public class FilmDBStorage implements FilmStorage {
             return preparedStatement;
         }, key);
         int id = key.getKey().intValue();
+        checkingFilm(film);
         film.setId(id);
 
         insertMpa(film);
@@ -303,6 +306,21 @@ public class FilmDBStorage implements FilmStorage {
             filmLikes.add(userId);
         }
         return filmLikes;
+    }
+
+    private void checkingFilm(Film film) throws ValidException {
+       /* if (films.containsValue(film)) {
+            log.info("Ошибка проверки фильма " + film.getName() + ". Фильм уже добавлен в пееречень");
+            throw new ValidException("Фильм уже добавлен в перечень");
+        }*/
+        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
+            log.info("Дата фильма " + film.getName() + " выходит за текущую дату в будущее");
+            throw new ValidException("Дата выхода фильма не корректная, из будущего");
+        }
+        if (film.getDuration().isNegative() || film.getDuration().isZero()) {
+            log.info("Продолжительность фильма " + film.getName() + " не положительное число");
+            throw new ValidException("Продолжительность фильма не положительное число");
+        }
     }
 
 }
