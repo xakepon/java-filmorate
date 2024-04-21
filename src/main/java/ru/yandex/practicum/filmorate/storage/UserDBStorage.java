@@ -29,6 +29,7 @@ public class UserDBStorage implements UserStorage {
 
     @Override
     public User addUser(User user) {
+        checkingUser(user);
         KeyHolder key = new GeneratedKeyHolder();
         String sql = "INSERT INTO users(email, login, name, birthday) VALUES(?, ?, ?, ?)";
         jdbcTemplate.update(connection -> {
@@ -41,7 +42,7 @@ public class UserDBStorage implements UserStorage {
         }, key);
         int id = key.getKey().intValue();
 
-        checkUser(user);
+
 
         user.setId(id);
 
@@ -189,7 +190,7 @@ public class UserDBStorage implements UserStorage {
         return userFriends;
     }
 
-    private void checkUser(User user) throws ValidException {
+    private void checkingUser(User user) throws ValidException {
        /* for (User mails : users.values()) {
             if (Objects.equals(mails.getEmail(), user.getEmail())) {
                 log.info("Пользователь с такой почтой уже существует");
