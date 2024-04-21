@@ -10,14 +10,12 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.validate.ValidException;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Component
@@ -42,6 +40,9 @@ public class UserDBStorage implements UserStorage {
             return preparedStatement;
         }, key);
         int id = key.getKey().intValue();
+
+        checkUser(user);
+
         user.setId(id);
 
 
@@ -186,6 +187,29 @@ public class UserDBStorage implements UserStorage {
             userFriends.put(userFriendsId, friendStatus);
         }
         return userFriends;
+    }
+
+    private void checkUser(User user) throws ValidException {
+       /* for (User mails : users.values()) {
+            if (Objects.equals(mails.getEmail(), user.getEmail())) {
+                log.info("Пользователь с такой почтой уже существует");
+                throw new ValidException("Пользователь с такой почтой уже существует");
+            }
+        }*/
+        if (user.getLogin().contains(" ")) {
+            log.info("Логин не должен содержать пробелов");
+            throw new ValidException("Логин не олжен быть пустым и содержать пробелов");
+        }
+        if (!user.getEmail().matches("^[a-zA-Z0-9_+&*-]+(?:" +
+                "\\.[a-zA-Z0-9_+&*-]+)*" + "@(?:[a-zA-Z0-9-]+" +
+                "\\.)+[a-zA-Z]{2,7}$")) {
+            log.info("Ошибка проверки электронной почты");
+            throw new ValidException("Ошибка проверки электронной почты");
+        }
+        if (user.getName() == null || user.getName().trim().isEmpty()) {
+            log.info("Поле имени не может быть пустым");
+            user.setName(user.getLogin());
+        }
     }
 
 }
