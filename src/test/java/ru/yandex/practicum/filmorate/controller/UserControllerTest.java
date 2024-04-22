@@ -22,7 +22,7 @@ class UserControllerTest {
     @DisplayName(value = "Проверка создания пользователя с корректными данными")
     public void addUserValidData() {
         User user = new User("example@example.com", "example", "Name1",
-                LocalDate.of(2019,6,29));
+                LocalDate.of(2014,6,29));
 
         ResponseEntity<User> response = restTemplate.postForEntity("/users", user, User.class);
         assertEquals(HttpStatus.OK, response.getStatusCode()); // надо вернуть created
