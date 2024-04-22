@@ -315,11 +315,12 @@ public class FilmDBStorage implements FilmStorage {
         }*/
         if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
             log.info("Дата фильма " + film.getName() + " выходит за текущую дату в будущее");
-            throw new ValidException("Дата выхода фильма не корректная, из будущего");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Дата выхода фильма не корректная, из будущего");
+
         }
         if (film.getDuration().isNegative() || film.getDuration().isZero()) {
             log.info("Продолжительность фильма " + film.getName() + " не положительное число");
-            throw new ValidException("Продолжительность фильма не положительное число");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Продолжительность фильма не положительное число");
         }
     }
 

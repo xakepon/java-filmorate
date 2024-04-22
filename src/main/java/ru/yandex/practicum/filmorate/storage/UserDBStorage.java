@@ -199,15 +199,15 @@ public class UserDBStorage implements UserStorage {
         }*/
         if (user.getLogin().contains(" ")) {
             log.info("Логин не должен содержать пробелов");
-            throw new ValidException("Логин не олжен быть пустым и содержать пробелов");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Логин не олжен быть пустым и содержать пробелов");
         }
         if (!user.getEmail().matches("^[a-zA-Z0-9_+&*-]+(?:" +
                 "\\.[a-zA-Z0-9_+&*-]+)*" + "@(?:[a-zA-Z0-9-]+" +
                 "\\.)+[a-zA-Z]{2,7}$")) {
             log.info("Ошибка проверки электронной почты");
-            throw new ValidException("Ошибка проверки электронной почты");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Ошибка проверки электронной почты");
         }
-        if (user.getName() == null || user.getName().trim().isEmpty()) {
+        if (user.getName().equals(null) || user.getName().trim().isEmpty()) {
             log.info("Поле имени не может быть пустым");
             user.setName(user.getLogin());
         }
