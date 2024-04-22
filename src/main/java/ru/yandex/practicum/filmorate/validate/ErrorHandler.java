@@ -66,7 +66,7 @@ public class ErrorHandler {
 
     @ExceptionHandler({ConstraintViolationException.class})
     //@ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleValidationExceptions(final ValidationException e) {
         return Map.of("error", e.getMessage());
     }
