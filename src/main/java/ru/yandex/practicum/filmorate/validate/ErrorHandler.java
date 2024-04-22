@@ -15,7 +15,8 @@ import java.util.Map;
 @RestControllerAdvice(assignableTypes = {FilmController.class, UserController.class,})
 public class ErrorHandler {
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    //@ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Map<String, String> handleValidationException(final ValidationException e) {
         return Map.of("error", e.getMessage());
     }
