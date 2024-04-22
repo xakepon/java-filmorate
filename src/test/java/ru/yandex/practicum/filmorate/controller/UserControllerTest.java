@@ -35,6 +35,6 @@ class UserControllerTest {
                 LocalDate.of(2025,1,1));
 
         ResponseEntity<User> response = restTemplate.postForEntity("/users", user, User.class);
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 }
