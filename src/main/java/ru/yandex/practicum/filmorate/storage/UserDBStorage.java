@@ -66,7 +66,7 @@ public class UserDBStorage implements UserStorage {
         }
         Optional<User> createdUser = Optional.of(user);
         log.info("Пользователь {} добавлен", user);
-        return createdUser.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return createdUser.orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     private void checkUser(int userId) {
