@@ -44,6 +44,6 @@ class FilmControllerTest {
                 LocalDate.of(2025, 3, 4),Duration.ofSeconds(3000));
 
         ResponseEntity<Film> response = restTemplate.postForEntity("/films", film, Film.class);
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode()); //BAD_REQUEST
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode()); //BAD_REQUEST
     }
 }
