@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 import ru.yandex.practicum.filmorate.controller.MyDurationSerializer;
+import ru.yandex.practicum.filmorate.validate.ValidDate;
+import ru.yandex.practicum.filmorate.validate.ValidDuration;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -35,10 +37,12 @@ public class Film {
 
     @NonNull
     @NotNull(message = "релиз фильма не null")
+    @ValidDate(date = "1895-12-28")
     private LocalDate releaseDate; // дата релиза фильма
 
     @NonNull
     @NotNull(message = "продолжительность фильма не null")
+    @ValidDuration
     @JsonSerialize(using = MyDurationSerializer.class)
     private Duration duration; // продолжительность фильма
 

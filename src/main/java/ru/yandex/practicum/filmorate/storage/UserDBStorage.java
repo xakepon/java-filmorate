@@ -29,7 +29,7 @@ public class UserDBStorage implements UserStorage {
 
     @Override
     public User addUser(User user) {
-        checkingUser(user);
+        //checkingUser(user);
         KeyHolder key = new GeneratedKeyHolder();
         String sql = "INSERT INTO users(email, login, name, birthday) VALUES(?, ?, ?, ?)";
         jdbcTemplate.update(connection -> {
@@ -41,11 +41,7 @@ public class UserDBStorage implements UserStorage {
             return preparedStatement;
         }, key);
         int id = key.getKey().intValue();
-
-
-
         user.setId(id);
-
 
         if (user.getFriends() != null) {
             String insertFriends = "INSERT INTO friends(user_id, users_id, status) VALUES (?, ?, ?)";
@@ -66,7 +62,7 @@ public class UserDBStorage implements UserStorage {
         }
         Optional<User> createdUser = Optional.of(user);
         log.info("Пользователь {} добавлен", user);
-        return createdUser.orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
+        return createdUser.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     private void checkUser(int userId) {
@@ -190,13 +186,13 @@ public class UserDBStorage implements UserStorage {
         return userFriends;
     }
 
-    private void checkingUser(User user) throws ValidException {
-       /* for (User mails : users.values()) {
+    /*private void checkingUser(User user) throws ValidException {
+        for (User mails : users.values()) {
             if (Objects.equals(mails.getEmail(), user.getEmail())) {
                 log.info("Пользователь с такой почтой уже существует");
                 throw new ValidException("Пользователь с такой почтой уже существует");
             }
-        }*/
+        }
         if (user.getLogin().contains(" ")) {
             log.info("Логин не должен содержать пробелов");
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Логин не олжен быть пустым и содержать пробелов");
@@ -211,6 +207,6 @@ public class UserDBStorage implements UserStorage {
             log.info("Поле имени не может быть пустым");
             user.setName(user.getLogin());
         }
-    }
+    }*/
 
 }

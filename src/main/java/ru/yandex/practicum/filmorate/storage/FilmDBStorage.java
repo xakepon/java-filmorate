@@ -12,13 +12,11 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
-import ru.yandex.practicum.filmorate.validate.ValidException;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.util.*;
 
 @Slf4j
@@ -45,7 +43,7 @@ public class FilmDBStorage implements FilmStorage {
             return preparedStatement;
         }, key);
         int id = key.getKey().intValue();
-        checkingFilm(film);
+        //checkingFilm(film);
         film.setId(id);
 
         insertMpa(film);
@@ -53,7 +51,8 @@ public class FilmDBStorage implements FilmStorage {
         insertLikes(film);
 
         Optional<Film> addedFilm = Optional.of(film);
-        return addedFilm.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+       // return addedFilm.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return addedFilm.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
     }
 
     private void checkFilm(int idFilm) {
@@ -172,7 +171,7 @@ public class FilmDBStorage implements FilmStorage {
             mpaMap.put(mpaFromRow.getInt("MPA_id"), mpaFromRow.getString("MPA_name"));
         }
         Optional<Map<Integer, String>> foundMpa = Optional.of(mpaMap);
-        return foundMpa.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Рейтинг не найден"));
+        return foundMpa.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Рейтинг не найден"));
     }
 
     @Override
@@ -194,7 +193,7 @@ public class FilmDBStorage implements FilmStorage {
             genreMap.put(genreFromRow.getInt("genre_id"), genreFromRow.getString("genre_name"));
         }
         Optional<Map<Integer, String>> foundGenre = Optional.of(genreMap);
-        return foundGenre.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Жанр не найден"));
+        return foundGenre.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Жанр не найден"));
     }
 
     @Override
@@ -308,11 +307,11 @@ public class FilmDBStorage implements FilmStorage {
         return filmLikes;
     }
 
-    private void checkingFilm(Film film) throws ValidException {
+   /* private void checkingFilm(Film film) throws ValidException {
        /* if (films.containsValue(film)) {
             log.info("Ошибка проверки фильма " + film.getName() + ". Фильм уже добавлен в пееречень");
             throw new ValidException("Фильм уже добавлен в перечень");
-        }*/
+        }
         if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
             log.info("Дата фильма " + film.getName() + " выходит за текущую дату в будущее");
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Дата выхода фильма не корректная, из будущего");
@@ -322,6 +321,6 @@ public class FilmDBStorage implements FilmStorage {
             log.info("Продолжительность фильма " + film.getName() + " не положительное число");
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Продолжительность фильма не положительное число");
         }
-    }
+    }*/
 
 }

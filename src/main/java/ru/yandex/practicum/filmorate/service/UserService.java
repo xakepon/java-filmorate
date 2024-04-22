@@ -14,7 +14,6 @@ import java.util.*;
 @AllArgsConstructor
 public class UserService {
 
-   // private final InMemoryUserStorage inMemoryUserStorage;
    private final UserDBStorage userDBStorage;
 
     public User addUser(User user) {

@@ -1,7 +1,9 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
+import ru.yandex.practicum.filmorate.validate.ValidBlank;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -13,6 +15,7 @@ import java.util.Map;
 
 @Data
 @Validated
+@Slf4j
 public class User {
 
     @NonNull
@@ -27,6 +30,7 @@ public class User {
     @NonNull
     @NotNull(message = "имя пользовтеля не null")
     @NotBlank(message = "имя пользовтеля не пустое")
+    @ValidBlank
     private String login; // логин пользователя
 
     @NonNull
@@ -47,6 +51,14 @@ public class User {
         this.login = login;
         this.name = name;
         this.birthday = birthday;
+        check();
+    }
+
+    private void check() {
+        if (name.isBlank()) {
+            log.info("Попытка создания пользователя с пустым именем, вместо имени примен логин");
+            name = login;
+        }
     }
     /* public Set<Long> getFriends() {
        return Set.copyOf(friends);
