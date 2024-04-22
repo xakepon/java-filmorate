@@ -9,14 +9,15 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.controller.UserController;
 
+import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 import java.util.Map;
 
 @RestControllerAdvice(assignableTypes = {FilmController.class, UserController.class,})
 public class ErrorHandler {
     @ExceptionHandler
-    //@ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    //@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Map<String, String> handleValidationException(final ValidationException e) {
         return Map.of("error", e.getMessage());
     }
@@ -60,6 +61,13 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handleResponseStatusException(ResponseStatusException e) {
+        return Map.of("error", e.getMessage());
+    }
+
+    @ExceptionHandler({ConstraintViolationException.class})
+    //@ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Map<String, String> handleValidationExceptions(final ValidationException e) {
         return Map.of("error", e.getMessage());
     }
 }
