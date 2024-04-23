@@ -98,9 +98,7 @@ public class FilmDBStorage implements FilmStorage {
                     filmRows.getString("name"),
                     filmRows.getString("description"),
                     filmRows.getDate("release_date").toLocalDate(),
-                    //filmRows.getObject("duration", Duration.class)); //подумать
                     Duration.ofSeconds(filmRows.getLong("duration")));
-
             film.setId(filmRows.getInt("film_id"));
             films.add(film);
         }

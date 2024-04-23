@@ -67,7 +67,7 @@ public class Film {
         return Set.copyOf(likes);
     }
 
-    public void setLike(long idUser) {
+/*    public void setLike(long idUser) {
         likes.add(idUser);
     }
 
@@ -77,5 +77,5 @@ public class Film {
 
     public int getcountFilm() {
         return ++countOfFilm;
-    }
+    }*/
 }

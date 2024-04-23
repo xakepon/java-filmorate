@@ -36,16 +36,28 @@ public class FilmService {
     public void settingLike(int idUser, int idFilm) {
         log.info("Gользователь {} пытается поставить лайк фильму {}", idUser, idFilm);
         Film film = filmDBStorage.getFilmById(idFilm);
-        if (film.getLikes()
+        /*if (film.getLikes()
                 .stream()
                 .anyMatch(id -> id == idUser)) {
             log.info("Пользователь {} не смог поставил лайк фильму {}, так как лайк уже стоит", idUser, idFilm);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Лайк уже стоит");
         }
         Set<Long> likes = film.getLikes();
+        likes.add((long)idUser);
+        film.setLikes(likes);
+            log.info("Пользователь {} поставил лайк фильму {}", idUser, idFilm);*/
+        Set<Long> likes = film.getLikes();
         likes.add((long) idUser);
-        film.setLike(idUser);
-            log.info("Пользователь {} поставил лайк фильму {}", idUser, idFilm);
+        film.setLikes(likes);
+        if (film.getLikes()
+                .stream()
+                .anyMatch(id -> id == idUser) && idUser > 0) {
+            log.info("Пользователь {} поставил лайк фильму {}.", idUser, idFilm);
+            filmDBStorage.updateFilm(film);
+        } else {
+            log.info("Пользователь {} не смог поставил лайк фильму {}.", idUser, idFilm);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Фильм не найден");
+        }
     }
 
     public void delLike(int idUser, int idFilm) {
@@ -66,8 +78,8 @@ public class FilmService {
         }
     }
 
-    public List<Film> getLargeLikedFilms(int count) {
-        log.info("Вывод самых {} популярных фильмов", count);
+    public List<Film> getLargeLikedFilms(Integer count) {
+        log.info("Вывод самых {} популярных фильмов в filmservice", count);
         ArrayList<Film> films = filmDBStorage.getAllFilms();
        /* Collections.sort(films,
                 Comparator.comparingInt((Film film) -> film.getLikes().size()).reversed());
