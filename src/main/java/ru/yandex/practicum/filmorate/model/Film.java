@@ -61,7 +61,6 @@ public class Film {
         this.releaseDate = releaseDate;
         this.duration = duration;
     }
-    
     public Set<Long> getLikes() {
         Set<Long> newLikes = likes;
         return newLikes;
