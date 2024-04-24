@@ -2,7 +2,9 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserDBStorage;
 
@@ -40,25 +42,29 @@ public class UserService {
         }
         user.setFriends(userDBStorage.addFriend(idUser, idFriend));
         userDBStorage.updateUser(user);
-        //User friend = inMemoryUserStorage.getUserById(idFriend);
-        //user.addFriend(idFriend);
-        //friend.addFriend(idUser);
     }
 
 
     public void delFriend(int idUser, int idFriend) {
-        log.info("Пользователь {} удалил {} из списка друзей.", idUser, idFriend);
+        log.info("Пользователь {} пытается удалить {} из списка друзей.", idUser, idFriend);
         User user = userDBStorage.getUserById(idUser);
+
+        if (user.getFriends().isEmpty()) {
+            return;
+        }
+
+        if (!user.getFriends().containsKey(idFriend)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
         user.getFriends().remove(idFriend);
+        log.info("Пользователь {}  удалил {} из списка друзей в объекте.", idUser, idFriend);
         if (user.getFriends() != null
                 && user.getFriends().containsKey(idUser)) {
             user.setFriends(userDBStorage.deleteFriend(idUser, idFriend));
+            log.info("Пользователь {}  удалил {} из списка друзей в БД.", idUser, idFriend);
         }
         userDBStorage.updateUser(user);
-        /* User user1 = inMemoryUserStorage.getUserById(idUser);
-        User user2 = inMemoryUserStorage.getUserById(idFriend);
-        user1.delFriend(idFriend);
-        user2.delFriend(idUser);*/
     }
 
     public ArrayList<User> getFriends(int idUser) {
@@ -72,16 +78,6 @@ public class UserService {
     }
 
     public ArrayList<User> getLargeFriends(int idUser1, int idUser2) {
-        /*User user1 = inMemoryUserStorage.getUserById(idUser1);
-        User user2 = inMemoryUserStorage.getUserById(idUser2);
-        Set<Long> set = new HashSet<>(user1.getFriends());
-        set.retainAll(user2.getFriends());
-        ArrayList<User> largeFriends = new ArrayList<>();
-        for (long part : set) {
-            User user = inMemoryUserStorage.getUserById((int) part);
-            largeFriends.add(user);
-        }
-        return largeFriends;*/
         Map<Integer, String> user1 = getUserById(idUser1).getFriends();
         Map<Integer, String> user2 = getUserById(idUser2).getFriends();
 

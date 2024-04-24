@@ -36,28 +36,33 @@ public class UserController {
         return userService.getAllUsers();
     }
 
+    //получение конкретного пользователей
     @GetMapping("/{idUser}")
     public User getUser(@PathVariable int idUser) {
         return userService.getUserById(idUser);
     }
 
+    //добавление в друзья
     @PutMapping("/{idUser}/friends/{idFriend}")
     public void addFriend(@PathVariable int idUser,
                           @PathVariable int idFriend) {
         userService.addFriend(idUser, idFriend);
     }
 
+    //удаление из друзей
     @DeleteMapping("/{idUser}/friends/{idFriend}")
-    public void deleteFriend(@PathVariable int idUser,
+    public void delFriend(@PathVariable int idUser,
                              @PathVariable int idFriend) {
         userService.delFriend(idUser, idFriend);
     }
 
+    //получение списка друзей
     @GetMapping("/{idUser}/friends")
     public ArrayList<User> getFriends(@PathVariable int idUser) {
         return userService.getFriends(idUser);
     }
 
+    //получение списка друзей
     @GetMapping("/{idUser}/friends/common/{idOther}")
     public ArrayList<User> getLargeFriends(@PathVariable int idUser,
                                             @PathVariable int idOther) {

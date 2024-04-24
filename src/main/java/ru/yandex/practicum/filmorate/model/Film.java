@@ -61,21 +61,8 @@ public class Film {
         this.releaseDate = releaseDate;
         this.duration = duration;
     }
-
     public Set<Long> getLikes() {
-        //Set<Long> newLikes = likes;
-        return Set.copyOf(likes);
+        Set<Long> newLikes = likes;
+        return newLikes;
     }
-
-/*    public void setLike(long idUser) {
-        likes.add(idUser);
-    }
-
-    public void delLike(long idUser) {
-        likes.remove(idUser);
-    }
-
-    public int getcountFilm() {
-        return ++countOfFilm;
-    }*/
 }

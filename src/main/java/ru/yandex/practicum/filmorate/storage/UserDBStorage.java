@@ -10,7 +10,6 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.validate.ValidException;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -29,7 +28,6 @@ public class UserDBStorage implements UserStorage {
 
     @Override
     public User addUser(User user) {
-        //checkingUser(user);
         KeyHolder key = new GeneratedKeyHolder();
         String sql = "INSERT INTO users(email, login, name, birthday) VALUES(?, ?, ?, ?)";
         jdbcTemplate.update(connection -> {
@@ -185,28 +183,4 @@ public class UserDBStorage implements UserStorage {
         }
         return userFriends;
     }
-
-    /*private void checkingUser(User user) throws ValidException {
-        for (User mails : users.values()) {
-            if (Objects.equals(mails.getEmail(), user.getEmail())) {
-                log.info("Пользователь с такой почтой уже существует");
-                throw new ValidException("Пользователь с такой почтой уже существует");
-            }
-        }
-        if (user.getLogin().contains(" ")) {
-            log.info("Логин не должен содержать пробелов");
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Логин не олжен быть пустым и содержать пробелов");
-        }
-        if (!user.getEmail().matches("^[a-zA-Z0-9_+&*-]+(?:" +
-                "\\.[a-zA-Z0-9_+&*-]+)*" + "@(?:[a-zA-Z0-9-]+" +
-                "\\.)+[a-zA-Z]{2,7}$")) {
-            log.info("Ошибка проверки электронной почты");
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Ошибка проверки электронной почты");
-        }
-        if (user.getName().equals(null) || user.getName().trim().isEmpty()) {
-            log.info("Поле имени не может быть пустым");
-            user.setName(user.getLogin());
-        }
-    }*/
-
 }

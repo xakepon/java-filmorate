@@ -43,7 +43,6 @@ public class FilmDBStorage implements FilmStorage {
             return preparedStatement;
         }, key);
         int id = key.getKey().intValue();
-        //checkingFilm(film);
         film.setId(id);
 
         insertMpa(film);
@@ -51,7 +50,6 @@ public class FilmDBStorage implements FilmStorage {
         insertLikes(film);
 
         Optional<Film> addedFilm = Optional.of(film);
-       // return addedFilm.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return addedFilm.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
     }
 
@@ -304,21 +302,4 @@ public class FilmDBStorage implements FilmStorage {
         }
         return filmLikes;
     }
-
-   /* private void checkingFilm(Film film) throws ValidException {
-       /* if (films.containsValue(film)) {
-            log.info("Ошибка проверки фильма " + film.getName() + ". Фильм уже добавлен в пееречень");
-            throw new ValidException("Фильм уже добавлен в перечень");
-        }
-        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
-            log.info("Дата фильма " + film.getName() + " выходит за текущую дату в будущее");
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Дата выхода фильма не корректная, из будущего");
-
-        }
-        if (film.getDuration().isNegative() || film.getDuration().isZero()) {
-            log.info("Продолжительность фильма " + film.getName() + " не положительное число");
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Продолжительность фильма не положительное число");
-        }
-    }*/
-
 }

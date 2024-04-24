@@ -43,7 +43,6 @@ public class User {
 
     private static int countOfUser = 0;
 
-    //private Set<Long> friends = new HashSet<>();
     private Map<Integer, String> friends = new HashMap<>();
 
     public User(String email, String login, String name, LocalDate birthday) {
@@ -60,23 +59,9 @@ public class User {
             name = login;
         }
     }
-    /* public Set<Long> getFriends() {
-       return Set.copyOf(friends);
-    } */
 
     public Map<Integer, String> getFriends() {
-        return Map.copyOf(friends);
+        Map<Integer, String> newFriends = friends;
+        return newFriends;
     }
-
-   /* public void addFriend(long id) {
-        friends.add(id);
-    }
-
-    public void delFriend(long id) {
-        friends.remove(id);
-    }
-
-    public int getCountOfUser() {
-        return ++countOfUser;
-    }*/
 }

@@ -15,18 +15,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class Testing {
+public class FilmServiceTest {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Test
     public void testFindFilmById() {
-        Film film = new Film("2007",
-                "Give me back my 2007",
-                LocalDate.of(2007, 7, 7),
-                Duration.ofSeconds(100));
+        Film film = new Film("2019",
+                "description1",
+                LocalDate.of(2009, 1, 2),
+                Duration.ofSeconds(2900));
         HashSet<Long> like = new HashSet<>();
-        like.clear();
         FilmDBStorage filmDBStorage = new FilmDBStorage(jdbcTemplate);
         filmDBStorage.addFilm(film);
         Film savedFilm = filmDBStorage.getFilmById(1);

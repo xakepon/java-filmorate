@@ -13,7 +13,7 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 
-public class UserTesting {
+public class UserTest {
     private Validator validator;
 
     @Before
@@ -23,48 +23,48 @@ public class UserTesting {
     }
 
     @Test
-    public void addInappropriateEmailFilmTest() {
+    public void addInvalidEmailUserTest() {
         User user = new User(
-                "IT JUST WORKS",
-                "MoneyLover",
-                "Todd",
-                LocalDate.of(1970, 10, 6));
+                "I n v a l i d",
+                "login1",
+                "name1",
+                LocalDate.of(1989, 2, 10));
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertEquals(1, violations.size());
     }
 
     @Test
-    public void addInappropriateLoginFilmTest() {
+    public void addInvalidLoginUserTest() {
         User user = new User(
-                "bethezds@gmail.com",
-                "IT JUST WORKS",
-                "Todd",
-                LocalDate.of(1970, 10, 6));
+                "gmail@mail.ru",
+                "I n v a l i d",
+                "name1",
+                LocalDate.of(1989, 2, 10));
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertEquals(1, violations.size());
     }
-/*
+
     @Test
-    public void addBlankNameFilmTest() {
+    public void addInvalidNameUserTest() {
         User user = new User(
-                "bethezds@gmail.com",
-                "MoneyLover",
+                "gmail@mail.ru",
+                "login1",
                 "",
-                LocalDate.of(1970, 10, 6));
-        assertEquals("MoneyLover", user.getName());
+                LocalDate.of(1989, 2, 10));
+        assertEquals("login1", user.getName());
     }
 
     @Test
-    public void addInappropriateDateFilmTest() {
+    public void addInvalidDateUserTest() {
         User user = new User(
-                "bethezds@gmail.com",
-                "MoneyLover",
-                "Todd",
-                LocalDate.of(9999, 10, 6));
+                "gmail@mail.ru",
+                "login1",
+                "name1",
+                LocalDate.of(2345, 2, 10));
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         assertEquals(1, violations.size());
-    }*/
+    }
 }

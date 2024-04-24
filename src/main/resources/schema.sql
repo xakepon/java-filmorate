@@ -7,9 +7,9 @@ CREATE TABLE IF NOT EXISTS genres (
 
 INSERT INTO genres (genre_name) VALUES
         ('Комедия'),
-        ('Драма'),
+        ('Фантастика'),
         ('Мультфильм'),
-        ('Триллер'),
+        ('Мелодрама'),
         ('Документальный'),
         ('Боевик');
 

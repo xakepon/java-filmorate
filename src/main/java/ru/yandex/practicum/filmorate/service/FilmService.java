@@ -36,19 +36,22 @@ public class FilmService {
     public void settingLike(int idUser, int idFilm) {
         log.info("Gользователь {} пытается поставить лайк фильму {}", idUser, idFilm);
         Film film = filmDBStorage.getFilmById(idFilm);
-        /*if (film.getLikes()
+       /* Set<Long> likes = film.getLikes();
+        likes.add((long) idUser);
+        film.setLikes(likes);
+        if (film.getLikes()
                 .stream()
-                .anyMatch(id -> id == idUser)) {
+                .noneMatch(id -> id == idUser) && idUser > 0) {
             log.info("Пользователь {} не смог поставил лайк фильму {}, так как лайк уже стоит", idUser, idFilm);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Лайк уже стоит");
         }
-        Set<Long> likes = film.getLikes();
-        likes.add((long)idUser);
-        film.setLikes(likes);
-            log.info("Пользователь {} поставил лайк фильму {}", idUser, idFilm);*/
-        Set<Long> likes = film.getLikes();
-        likes.add((long) idUser);
-        film.setLikes(likes);
+        log.info("Пользователь {} поставил лайк фильму {}", idUser, idFilm);*/
+
+        /* пришлось вернуть старый код, тесты постмана начали валиться*/
+        Set<Long> newLikes = film.getLikes();
+        Long longUser = Long.valueOf(idUser);
+        newLikes.add(longUser);
+        film.setLikes(newLikes);
         if (film.getLikes()
                 .stream()
                 .anyMatch(id -> id == idUser) && idUser > 0) {
@@ -81,9 +84,6 @@ public class FilmService {
     public List<Film> getLargeLikedFilms(Integer count) {
         log.info("Вывод самых {} популярных фильмов в filmservice", count);
         ArrayList<Film> films = filmDBStorage.getAllFilms();
-       /* Collections.sort(films,
-                Comparator.comparingInt((Film film) -> film.getLikes().size()).reversed());
-        return films.subList(0, Math.min(films.size(), count));*/
         films.sort((film1, film2) -> {
             if (film1.getLikes().contains(0)) {
                 return film2.getLikes().contains(0) ? Integer.compare(film2.getLikes().size(), film1.getLikes().size()) : 1;
