@@ -42,14 +42,14 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST) //NOT_FOUND
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleNotFoundException(final RuntimeException e) {
         log.error("handleNotFoundException");
         return Map.of("error", e.getMessage());
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND) //BAD_REQUEST
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handleNullPointException(final NullPointerException e) {
         log.error("handleNullPointException");
         return Map.of("error", e.getMessage());
@@ -84,7 +84,6 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler({ConstraintViolationException.class})
-    //@ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleValidationExceptions(final ValidationException e) {
         log.error("handleValidationExceptions");

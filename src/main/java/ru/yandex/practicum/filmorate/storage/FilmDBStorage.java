@@ -63,14 +63,15 @@ public class FilmDBStorage implements FilmStorage {
 
     @Override
     public Film updateFilm(Film film) {
-        checkFilm(film.getId());
+        //checkFilm(film.getId());
         String sql = "UPDATE film SET name=?, description=?, release_date=?, duration=? WHERE film_id=?";
-        jdbcTemplate.update(sql,
+        if (jdbcTemplate.update(sql,
                 film.getName(),
                 film.getDescription(),
                 film.getReleaseDate(),
                 film.getDuration(),
-                film.getId());
+                film.getId()) == 0) {log.info("Фильм c id {} не найден", film.getId());
+            throw new IllegalArgumentException("Не верный id фильма");}
 
         String deleteMpaSql = "DELETE FROM MPA_ids WHERE film_id=?";
         jdbcTemplate.update(deleteMpaSql, film.getId());
@@ -83,11 +84,11 @@ public class FilmDBStorage implements FilmStorage {
         String deleteLikesSql = "DELETE FROM likes WHERE film_id=?";
         jdbcTemplate.update(deleteLikesSql, film.getId());
         insertLikes(film);
-        Optional<Film> updatedFilm = Optional.of(film);
-        return updatedFilm.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        //Optional<Film> updatedFilm = Optional.of(film);
+        return film; //.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    @Override
+   /* @Override
     public ArrayList<Film> getAllFilms() {
         ArrayList<Film> films = new ArrayList<>();
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet("SELECT * FROM film");
@@ -113,7 +114,34 @@ public class FilmDBStorage implements FilmStorage {
         }
 
         return filmsWithStats;
+    }*/
+
+    @Override
+    public ArrayList<Film> getAllFilms() {
+        ArrayList<Film> films = new ArrayList<>();
+        SqlRowSet filmRows = jdbcTemplate.queryForRowSet("SELECT film.FILM_ID, film.name, film.DESCRIPTION, film.release_date, film.DURATION,  motion_picture_association.MPA_name, genres.genre_name, likes.FILM_ID, likes.USER_ID  \n" +
+                "FROM film\n" +
+                "JOIN MPA_ids ON film.film_id = MPA_ids.film_id\n" +
+                "JOIN motion_picture_association ON MPA_ids.mpa_id = motion_picture_association.MPA_id\n" +
+                "JOIN film_genres ON film.film_id = film_genres.film_id\n" +
+                "JOIN genres ON film_genres.genre_id = genres.genre_id\n" +
+                "JOIN likes ON film.film_id = likes.film_id\n" +
+                "ORDER BY FILM_ID asc;");
+        while (filmRows.next()) {
+            Film film = new Film(
+                    filmRows.getString("name"),
+                    filmRows.getString("description"),
+                    filmRows.getDate("release_date").toLocalDate(),
+                    Duration.ofSeconds(filmRows.getLong("duration")));
+            film.setId(filmRows.getInt("film_id"));
+            film.setMpa(selectMpa().get(id));
+
+
+            films.add(film);
+        }
+        return films;
     }
+
 
     @Override
     public Film getFilmById(int filmId) {
@@ -134,8 +162,8 @@ public class FilmDBStorage implements FilmStorage {
             }
             film.setLikes(selectLikes(id));
 
-            Optional<Film> foundFilm = Optional.of(film);
-            return foundFilm.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Фильм не найден"));
+           // Optional<Film> foundFilm = Optional.of(film);
+            return film;//foundFilm.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Фильм не найден"));
         }
 
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Фильм не найден");
