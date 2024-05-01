@@ -78,5 +78,4 @@ public class Film {
         private int id;
         private String name;
     }
-    
 }
