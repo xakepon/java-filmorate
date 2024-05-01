@@ -10,8 +10,6 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -140,16 +138,16 @@ public class FilmDBStorage implements FilmStorage {
 
                 int genreId = filmRows.getInt("GENRE_ID");
                 String genreName = filmRows.getString("GENRE_name");
-                Genre genre = new Genre();
+            Film.Genre genre = new Film.Genre();
                 genre.setId(genreId);
                 genre.setName(genreName);
-                Set<Genre> genreSet = new HashSet<>();
+                Set<Film.Genre> genreSet = new HashSet<>();
                 genreSet.add(genre);
                 film.setGenres(genreSet);
 
                 int mpaId = filmRows.getInt("MPA_ID");
                 String mpaName = filmRows.getString("MPA_name");
-                Mpa mpa = new Mpa();
+            Film.Mpa mpa = new Film.Mpa();
                 mpa.setId(mpaId);
                 mpa.setName(mpaName);
                 film.setMpa(mpa);
@@ -212,7 +210,7 @@ public class FilmDBStorage implements FilmStorage {
             film.setMpa(selectMpa().get(id));
             film.setGenres(selectGenres().get(id));
             if (film.getGenres() == null) {
-                film.setGenres(new HashSet<Genre>());
+                film.setGenres(new HashSet<Film.Genre>());
             }
             film.setLikes(selectLikes(id));
 
@@ -311,7 +309,7 @@ public class FilmDBStorage implements FilmStorage {
     }
 
     private void insertGenre(Film film) {
-        for (Genre genre : film.getGenres()) {
+        for (Film.Genre genre : film.getGenres()) {
             String insertGenresSql = "INSERT INTO film_genres(film_id, genre_id) VALUES (?, ?)";
             jdbcTemplate.update(insertGenresSql, film.getId(), genre.getId());
         }
@@ -333,7 +331,7 @@ public class FilmDBStorage implements FilmStorage {
         }
     }
 
-    private HashMap<Integer, Mpa> selectMpa() {
+    private HashMap<Integer, Film.Mpa> selectMpa() {
 
         SqlRowSet mpaRows = jdbcTemplate.queryForRowSet(
                 "SELECT MPA_ids.film_id, motion_picture_association.mpa_id, motion_picture_association.mpa_name " +
@@ -341,9 +339,9 @@ public class FilmDBStorage implements FilmStorage {
                         "LEFT OUTER JOIN motion_picture_association " +
                         "ON MPA_ids.mpa_id = motion_picture_association.mpa_id");
 
-        HashMap<Integer, Mpa> filmsMpa = new HashMap<>();
+        HashMap<Integer, Film.Mpa> filmsMpa = new HashMap<>();
         while (mpaRows.next()) {
-            Mpa mpaWrap = new Mpa();
+            Film.Mpa mpaWrap = new Film.Mpa();
             int id = mpaRows.getInt("film_id");
             mpaWrap.setId(mpaRows.getInt("mpa_id"));
             mpaWrap.setName(mpaRows.getString("mpa_name"));
@@ -352,21 +350,21 @@ public class FilmDBStorage implements FilmStorage {
         return filmsMpa;
     }
 
-    private HashMap<Integer, Set<Genre>> selectGenres() {
+    private HashMap<Integer, Set<Film.Genre>> selectGenres() {
 
         SqlRowSet genreRows = jdbcTemplate.queryForRowSet(
                 "SELECT * FROM film_genres" +
                         " LEFT OUTER JOIN genres" +
                         " ON film_genres.genre_id = genres.genre_id");
 
-        HashMap<Integer, Set<Genre>> filmsGenres = new HashMap<>();
+        HashMap<Integer, Set<Film.Genre>> filmsGenres = new HashMap<>();
         while (genreRows.next()) {
             int filmId = genreRows.getInt("film_id");
-            Genre genreWrap = new Genre();
+            Film.Genre genreWrap = new Film.Genre();
             genreWrap.setId(genreRows.getInt("genre_id"));
             genreWrap.setName(genreRows.getString("genre_name"));
             if (!filmsGenres.containsKey(filmId)) {
-                filmsGenres.put(filmId, new TreeSet<>(Comparator.comparingInt(Genre::getId)));
+                filmsGenres.put(filmId, new TreeSet<>(Comparator.comparingInt(Film.Genre::getId)));
             }
             filmsGenres.get(filmId).add(genreWrap);
         }

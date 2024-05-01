@@ -66,4 +66,15 @@ public class Film {
         Set<Long> newLikes = likes;
         return newLikes;
     }
+    @Data
+    public static class Mpa {
+        private int id;
+        private String name;
+    }
+
+    @Data
+    public static class Genre {
+        private int id;
+        private String name;
+    }
 }

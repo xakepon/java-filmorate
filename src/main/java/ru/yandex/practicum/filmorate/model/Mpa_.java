@@ -6,11 +6,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class Genre {
+public class Mpa_ {
 
     private int id;
 
+    @NotBlank(message = "рейтинг фильма не должен быть пустым")
     @NotNull
-    @NotBlank(message = "жанр фильма не должен быть пустым")
     private String name;
 }
