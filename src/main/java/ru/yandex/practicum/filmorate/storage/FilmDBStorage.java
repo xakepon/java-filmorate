@@ -70,8 +70,10 @@ public class FilmDBStorage implements FilmStorage {
                 film.getDescription(),
                 film.getReleaseDate(),
                 film.getDuration(),
-                film.getId()) == 0) {log.info("Фильм c id {} не найден", film.getId());
-            throw new IllegalArgumentException("Не верный id фильма");}
+                film.getId()) == 0) {
+            log.info("Фильм c id {} не найден", film.getId());
+            throw new IllegalArgumentException("Не верный id фильма");
+        }
 
         String deleteMpaSql = "DELETE FROM MPA_ids WHERE film_id=?";
         jdbcTemplate.update(deleteMpaSql, film.getId());
@@ -281,6 +283,7 @@ public class FilmDBStorage implements FilmStorage {
         Film film = getFilmById(filmId);
         if (film.getLikes() == null) {
             film.setLikes(new HashSet<>());
+            insertLikes(film);
         }
 
         return likes;
