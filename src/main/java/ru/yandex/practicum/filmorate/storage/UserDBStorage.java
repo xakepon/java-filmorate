@@ -75,7 +75,7 @@ public class UserDBStorage implements UserStorage {
     public User updateUser(User user) {
         //checkUser(user.getId());
         String sql = "UPDATE users SET email=?, login=?, name=?, birthday=? WHERE user_id=?";
-       if ( jdbcTemplate.update(sql,
+       if (jdbcTemplate.update(sql,
                 user.getEmail(),
                 user.getLogin(),
                 user.getName(),
