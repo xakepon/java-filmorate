@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class Mpa_ {
+public class MpaOld {
 
     private int id;
 

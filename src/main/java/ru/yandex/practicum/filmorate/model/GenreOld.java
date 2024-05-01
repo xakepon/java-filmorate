@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class Genre_ {
+public class GenreOld {
 
     private int id;
 
