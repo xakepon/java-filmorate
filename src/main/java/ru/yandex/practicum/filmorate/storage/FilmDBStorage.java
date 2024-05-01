@@ -88,7 +88,7 @@ public class FilmDBStorage implements FilmStorage {
         return film; //.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-   /* @Override
+    @Override
     public ArrayList<Film> getAllFilms() {
         ArrayList<Film> films = new ArrayList<>();
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet("SELECT * FROM film");
@@ -107,16 +107,16 @@ public class FilmDBStorage implements FilmStorage {
             film.setMpa(selectMpa().get(id));
             film.setGenres(selectGenres().get(id));
             if (film.getGenres() == null) {
-                film.setGenres(new HashSet<Genre>());
+                film.setGenres(new HashSet<Film.Genre>());
             }
             film.setLikes(selectLikes(id));
             filmsWithStats.add(film);
         }
 
         return filmsWithStats;
-    }*/
+    }
 
-    @Override
+   /*@Override
     public ArrayList<Film> getAllFilms() {
         ArrayList<Film> films = new ArrayList<>();
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet("SELECT film.FILM_ID, film.name, film.DESCRIPTION, film.release_date, film.DURATION,  motion_picture_association.MPA_ID , motion_picture_association.MPA_name, genres.GENRE_ID , genres.genre_name, likes.FILM_ID, likes.USER_ID  \n" +
@@ -189,10 +189,10 @@ public class FilmDBStorage implements FilmStorage {
 
                     films.remove(i + 1);
                 }
-            }*/
+            }
 
         return films;
-    }
+    }*/
 
 
     @Override
