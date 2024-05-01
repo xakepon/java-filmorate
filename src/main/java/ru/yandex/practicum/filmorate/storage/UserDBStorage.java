@@ -73,14 +73,17 @@ public class UserDBStorage implements UserStorage {
 
     @Override
     public User updateUser(User user) {
-        checkUser(user.getId());
+        //checkUser(user.getId());
         String sql = "UPDATE users SET email=?, login=?, name=?, birthday=? WHERE user_id=?";
-        jdbcTemplate.update(sql,
+       if ( jdbcTemplate.update(sql,
                 user.getEmail(),
                 user.getLogin(),
                 user.getName(),
                 user.getBirthday(),
-                user.getId());
+                user.getId()) == 0) {
+           log.info("Пользователь c id {} не найден", user.getId());
+           throw new IllegalArgumentException("Не верный id");
+       }
 
         if (user.getFriends() != null) {
             String deleteFriends = "DELETE FROM friends WHERE user_id=?";
@@ -91,8 +94,8 @@ public class UserDBStorage implements UserStorage {
                 jdbcTemplate.update(insertFriends, user.getId(), entry.getKey(), entry.getValue());
             }
         }
-        Optional<User> updatedUser = Optional.of(user);
-        return updatedUser.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+       // Optional<User> updatedUser = Optional.of(user);
+        return user;//updatedUser.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
     @Override
@@ -140,8 +143,8 @@ public class UserDBStorage implements UserStorage {
             }
 
             user.setFriends(userFriends);
-            Optional<User> foundUser = Optional.of(user);
-            return foundUser.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+           // Optional<User> foundUser = Optional.of(user);
+            return user;//foundUser.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }

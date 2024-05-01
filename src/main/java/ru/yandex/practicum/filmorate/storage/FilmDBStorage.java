@@ -119,26 +119,78 @@ public class FilmDBStorage implements FilmStorage {
     @Override
     public ArrayList<Film> getAllFilms() {
         ArrayList<Film> films = new ArrayList<>();
-        SqlRowSet filmRows = jdbcTemplate.queryForRowSet("SELECT film.FILM_ID, film.name, film.DESCRIPTION, film.release_date, film.DURATION,  motion_picture_association.MPA_name, genres.genre_name, likes.FILM_ID, likes.USER_ID  \n" +
+        SqlRowSet filmRows = jdbcTemplate.queryForRowSet("SELECT film.FILM_ID, film.name, film.DESCRIPTION, film.release_date, film.DURATION,  motion_picture_association.MPA_ID , motion_picture_association.MPA_name, genres.GENRE_ID , genres.genre_name, likes.FILM_ID, likes.USER_ID  \n" +
                 "FROM film\n" +
                 "JOIN MPA_ids ON film.film_id = MPA_ids.film_id\n" +
                 "JOIN motion_picture_association ON MPA_ids.mpa_id = motion_picture_association.MPA_id\n" +
                 "JOIN film_genres ON film.film_id = film_genres.film_id\n" +
                 "JOIN genres ON film_genres.genre_id = genres.genre_id\n" +
                 "JOIN likes ON film.film_id = likes.film_id\n" +
-                "ORDER BY FILM_ID asc;");
+                "GROUP BY film.FILM_ID, film.name, film.DESCRIPTION, film.release_date, film.DURATION,  motion_picture_association.MPA_ID , motion_picture_association.MPA_name, genres.GENRE_ID , genres.genre_name, likes.FILM_ID, likes.USER_ID");
         while (filmRows.next()) {
-            Film film = new Film(
-                    filmRows.getString("name"),
-                    filmRows.getString("description"),
-                    filmRows.getDate("release_date").toLocalDate(),
-                    Duration.ofSeconds(filmRows.getLong("duration")));
-            film.setId(filmRows.getInt("film_id"));
-            film.setMpa(selectMpa().get(id));
 
+                Film film = new Film(
+                        filmRows.getString("name"),
+                        filmRows.getString("description"),
+                        filmRows.getDate("release_date").toLocalDate(),
+                        Duration.ofSeconds(filmRows.getLong("duration")));
+                film.setId(filmRows.getInt("film_id"));
 
-            films.add(film);
+                int genreId = filmRows.getInt("GENRE_ID");
+                String genreName = filmRows.getString("GENRE_name");
+                Genre genre = new Genre();
+                genre.setId(genreId);
+                genre.setName(genreName);
+                Set<Genre> genreSet = new HashSet<>();
+                genreSet.add(genre);
+                film.setGenres(genreSet);
+
+                int mpaId = filmRows.getInt("MPA_ID");
+                String mpaName = filmRows.getString("MPA_name");
+                Mpa mpa = new Mpa();
+                mpa.setId(mpaId);
+                mpa.setName(mpaName);
+                film.setMpa(mpa);
+
+                long likesUsers = filmRows.getInt("USER_ID");
+                int likesFilms = filmRows.getInt("FILM_ID");
+                Set<Long> like = new HashSet<>();
+                if (likesUsers != 0 && likesFilms != 0) {
+                    if (film.getId() == likesFilms) {
+                        like.add(likesUsers);
+                        film.setLikes(like);
+                    }
+                }
+                films.add(film);
         }
+
+       /*     ArrayList<Film> filmsNew = new ArrayList<>();
+            filmsNew.add(films.get(0));
+        for (int i = 0; i < films.size(); i++) {
+            for (int j = 0; j < filmsNew.size(); j++) {
+                if (films.get(i).getId() != filmsNew.get(j).getId()){
+                    filmsNew.add(films.get(i));
+                }
+            }
+        }
+
+
+            for (int i = 0; i < films.size(); i++) {
+
+
+                if (films.get(i).getId() == filmsNew.get(i).getId()) {
+                    if (films.get(i).getGenres() != films.get(i).getGenres() ) {
+                        Set<Genre> genreSet = films.get(i).getGenres();
+                        genreSet.addAll(films.get(i+1).getGenres());
+                    }
+
+                    Set<Long> likeSet = films.get(i).getLikes();
+                    likeSet.addAll(films.get(i+1).getLikes());
+
+                    films.remove(i + 1);
+                }
+            }*/
+
         return films;
     }
 
