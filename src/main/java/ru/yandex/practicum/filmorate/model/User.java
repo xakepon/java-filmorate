@@ -1,18 +1,21 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
+import ru.yandex.practicum.filmorate.validate.ValidBlank;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 @Data
 @Validated
+@Slf4j
 public class User {
 
     @NonNull
@@ -27,6 +30,7 @@ public class User {
     @NonNull
     @NotNull(message = "имя пользовтеля не null")
     @NotBlank(message = "имя пользовтеля не пустое")
+    @ValidBlank
     private String login; // логин пользователя
 
     @NonNull
@@ -39,27 +43,25 @@ public class User {
 
     private static int countOfUser = 0;
 
-    private Set<Long> friends = new HashSet<>();
+    private Map<Integer, String> friends = new HashMap<>();
 
     public User(String email, String login, String name, LocalDate birthday) {
         this.email = email;
         this.login = login;
         this.name = name;
         this.birthday = birthday;
-    }
-    public Set<Long> getFriends() {
-       return Set.copyOf(friends);
+        check();
     }
 
-    public void addFriend(long id) {
-        friends.add(id);
+    private void check() {
+        if (name.isBlank()) {
+            log.info("Попытка создания пользователя с пустым именем, вместо имени примен логин");
+            name = login;
+        }
     }
 
-    public void delFriend(long id) {
-        friends.remove(id);
-    }
-
-    public int getCountOfUser() {
-        return ++countOfUser;
+    public Map<Integer, String> getFriends() {
+        Map<Integer, String> newFriends = friends;
+        return newFriends;
     }
 }

@@ -35,25 +35,29 @@ public class FilmController {
         return filmService.getAllFilms();
     }
 
+    // получение конкретного фильма
     @GetMapping("/{id}")
     public Film getFilm(@PathVariable int id) {
         return filmService.getFilmById(id);
     }
 
+    // установка лайка фильму от пользователя
     @PutMapping("/{idFilm}/like/{idUser}")
-    public void giveFilmLike(@PathVariable int idFilm,
+    public void setFilmLike(@PathVariable int idFilm,
                                @PathVariable int idUser) {
         filmService.settingLike(idUser, idFilm);
     }
 
+    // удаление лайка фильму от пользователя
     @DeleteMapping("/{idFilm}/like/{idUser}")
     public void delLike(@PathVariable int idFilm,
                            @PathVariable int idUser) {
         filmService.delLike(idUser, idFilm);
     }
 
+    // получение списка популярных фильмов
     @GetMapping("/popular")
-    public List<Film> getBestFilms(
+    public List<Film> getLargeLikedFilms(
             @RequestParam(defaultValue = "10") Integer count) {
         return filmService.getLargeLikedFilms(count);
     }
