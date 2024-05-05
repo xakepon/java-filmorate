@@ -117,8 +117,10 @@ public class FilmDBStorage implements FilmStorage {
     }
 
    /*@Override
+     @Override
     public ArrayList<Film> getAllFilms() {
-        ArrayList<Film> films = new ArrayList<>();
+
+        Map <Integer, Film> filmsMap = new HashMap<>();
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet("SELECT film.FILM_ID, film.name, film.DESCRIPTION, film.release_date, film.DURATION,  motion_picture_association.MPA_ID , motion_picture_association.MPA_name, genres.GENRE_ID , genres.genre_name, likes.FILM_ID, likes.USER_ID  \n" +
                 "FROM film\n" +
                 "JOIN MPA_ids ON film.film_id = MPA_ids.film_id\n" +
@@ -129,6 +131,7 @@ public class FilmDBStorage implements FilmStorage {
                 "GROUP BY film.FILM_ID, film.name, film.DESCRIPTION, film.release_date, film.DURATION,  motion_picture_association.MPA_ID , motion_picture_association.MPA_name, genres.GENRE_ID , genres.genre_name, likes.FILM_ID, likes.USER_ID");
         while (filmRows.next()) {
 
+            if (filmsMap.isEmpty()) {
                 Film film = new Film(
                         filmRows.getString("name"),
                         filmRows.getString("description"),
@@ -138,7 +141,7 @@ public class FilmDBStorage implements FilmStorage {
 
                 int genreId = filmRows.getInt("GENRE_ID");
                 String genreName = filmRows.getString("GENRE_name");
-            Film.Genre genre = new Film.Genre();
+                Film.Genre genre = new Film.Genre();
                 genre.setId(genreId);
                 genre.setName(genreName);
                 Set<Film.Genre> genreSet = new HashSet<>();
@@ -147,7 +150,7 @@ public class FilmDBStorage implements FilmStorage {
 
                 int mpaId = filmRows.getInt("MPA_ID");
                 String mpaName = filmRows.getString("MPA_name");
-            Film.Mpa mpa = new Film.Mpa();
+                Film.Mpa mpa = new Film.Mpa();
                 mpa.setId(mpaId);
                 mpa.setName(mpaName);
                 film.setMpa(mpa);
@@ -161,37 +164,80 @@ public class FilmDBStorage implements FilmStorage {
                         film.setLikes(like);
                     }
                 }
-                films.add(film);
-        }
-
-       /*     ArrayList<Film> filmsNew = new ArrayList<>();
-            filmsNew.add(films.get(0));
-        for (int i = 0; i < films.size(); i++) {
-            for (int j = 0; j < filmsNew.size(); j++) {
-                if (films.get(i).getId() != filmsNew.get(j).getId()){
-                    filmsNew.add(films.get(i));
-                }
+                filmsMap.put(filmRows.getInt("film_id"),film);
             }
-        }
+
+            for(Map.Entry<Integer, Film> entry : filmsMap.entrySet()) {
+                Integer key = entry.getKey();
+                Film value = entry.getValue();
+                if (filmRows.getInt("film_id") != key) {
+                    Film film = new Film(
+                            filmRows.getString("name"),
+                            filmRows.getString("description"),
+                            filmRows.getDate("release_date").toLocalDate(),
+                            Duration.ofSeconds(filmRows.getLong("duration")));
+                    film.setId(filmRows.getInt("film_id"));
+
+                    int genreId = filmRows.getInt("GENRE_ID");
+                    String genreName = filmRows.getString("GENRE_name");
+                    Film.Genre genre = new Film.Genre();
+                    genre.setId(genreId);
+                    genre.setName(genreName);
+                    Set<Film.Genre> genreSet = new HashSet<>();
+                    genreSet.add(genre);
+                    film.setGenres(genreSet);
+
+                    int mpaId = filmRows.getInt("MPA_ID");
+                    String mpaName = filmRows.getString("MPA_name");
+                    Film.Mpa mpa = new Film.Mpa();
+                    mpa.setId(mpaId);
+                    mpa.setName(mpaName);
+                    film.setMpa(mpa);
+
+                    long likesUsers = filmRows.getInt("USER_ID");
+                    int likesFilms = filmRows.getInt("FILM_ID");
+                    Set<Long> like = new HashSet<>();
+                    if (likesUsers != 0 && likesFilms != 0) {
+                        if (film.getId() == likesFilms) {
+                            like.add(likesUsers);
+                            film.setLikes(like);
+                        }
+                    }
+                    filmsMap.put(filmRows.getInt("film_id"),film);
+                } else if (filmRows.getInt("film_id") == key) {
+                    if (!value.getGenres().isEmpty()) {
+                        Set<Film.Genre> genreSet = value.getGenres();
 
 
-            for (int i = 0; i < films.size(); i++) {
+                        int genreId = filmRows.getInt("GENRE_ID");
+                        String genreName = filmRows.getString("GENRE_name");
+                        Film.Genre genre = new Film.Genre();
 
+                        genre.setId(genreId);
+                        genre.setName(genreName);
+                        if (!genreSet.contains(genre)) {
+                            //Set<Film.Genre> genreSet = new HashSet<>();
+                            genreSet.add(genre);
 
-                if (films.get(i).getId() == filmsNew.get(i).getId()) {
-                    if (films.get(i).getGenres() != films.get(i).getGenres() ) {
-                        Set<Genre> genreSet = films.get(i).getGenres();
-                        genreSet.addAll(films.get(i+1).getGenres());
+                            value.setGenres(genreSet);
+                        }
+
                     }
 
-                    Set<Long> likeSet = films.get(i).getLikes();
-                    likeSet.addAll(films.get(i+1).getLikes());
+                    if (!value.getLikes().isEmpty()) {
+                        Set<Long> likeSet = value.getLikes();
 
-                    films.remove(i + 1);
+                        if (!likeSet.contains((long) filmRows.getInt("USER_ID"))){
+                            likeSet.add ((long) filmRows.getInt("USER_ID"));
+                        }
+                    }
+
                 }
             }
+        }
 
-        return films;
+
+       return new ArrayList<>(filmsMap.values());
     }*/
 
 
