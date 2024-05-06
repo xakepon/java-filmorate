@@ -131,10 +131,11 @@ public class FilmDBStorage implements FilmStorage {
         while (filmRows.next()) {
 
 
-           for(Map.Entry<Integer, Film> entry : filmsMap.entrySet()) {
+          /* for(Map.Entry<Integer, Film> entry : filmsMap.entrySet()) {
                 Integer key = entry.getKey();
-                Film value = entry.getValue();
-                if (filmRows.getInt("film_id") != key) {
+                Film value = entry.getValue();*/
+
+                if (!filmsMap.containsKey(filmRows.getInt("film_id"))) {
                     Film film = new Film(
                             filmRows.getString("name"),
                             filmRows.getString("description"),
@@ -168,10 +169,11 @@ public class FilmDBStorage implements FilmStorage {
                         }
                     }
                     filmsMap.put(filmRows.getInt("film_id"),film);
-                    log.info("ДОБАВЛЕН ФИЛЬМ {} ", key);
-                } else if (filmRows.getInt("film_id") == key) {
-                    if (!value.getGenres().isEmpty()) {
-                        Set<Film.Genre> genreSet = value.getGenres();
+                    log.info("ДОБАВЛЕН ФИЛЬМ {} ", filmsMap.get(filmRows.getInt("film_id")));
+
+                } else if (filmsMap.containsKey(filmRows.getInt("film_id"))) {
+                    if (filmsMap.get(filmRows.getInt("film_id")).getGenres().isEmpty()) {
+                        Set<Film.Genre> genreSet = filmsMap.get(filmRows.getInt("film_id")).getGenres();
 
 
                         int genreId = filmRows.getInt("GENRE_ID");
@@ -184,25 +186,23 @@ public class FilmDBStorage implements FilmStorage {
                             //Set<Film.Genre> genreSet = new HashSet<>();
                             genreSet.add(genre);
 
-                            value.setGenres(genreSet);
-                            log.info("ОБНОВЛЕН ЖАНР ФИЛЬМ {} ", key);
+                            filmsMap.get(filmRows.getInt("film_id")).setGenres(genreSet);
+                            log.info("ОБНОВЛЕН ЖАНР ФИЛЬМ {} ", filmsMap.get(filmRows.getInt("film_id")));
                         }
 
                     }
 
-                    if (!value.getLikes().isEmpty()) {
-                        Set<Long> likeSet = value.getLikes();
+                    if (!filmsMap.get(filmRows.getInt("film_id")).getLikes().isEmpty()) {
+                        Set<Long> likeSet = filmsMap.get(filmRows.getInt("film_id")).getLikes();
 
                         if (!likeSet.contains((long) filmRows.getInt("USER_ID"))){
                             likeSet.add ((long) filmRows.getInt("USER_ID"));
-                            log.info("ОБНОВЛЕНЫ ЛАЙКИ ФИЛЬМ {} ", key);
+                            log.info("ОБНОВЛЕНЫ ЛАЙКИ ФИЛЬМ {} ", filmsMap.get(filmRows.getInt("film_id")));
                         }
                     }
 
                 }
-           }
         }
-
 
        return new ArrayList<>(filmsMap.values());
     }
