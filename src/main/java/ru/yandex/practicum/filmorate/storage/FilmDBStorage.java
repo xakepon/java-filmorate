@@ -84,11 +84,10 @@ public class FilmDBStorage implements FilmStorage {
         String deleteLikesSql = "DELETE FROM likes WHERE film_id=?";
         jdbcTemplate.update(deleteLikesSql, film.getId());
         insertLikes(film);
-        //Optional<Film> updatedFilm = Optional.of(film);
-        return film; //.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return film;
     }
 
-    @Override
+    /*@Override
     public ArrayList<Film> getAllFilms() {
         ArrayList<Film> films = new ArrayList<>();
         SqlRowSet filmRows = jdbcTemplate.queryForRowSet("SELECT * FROM film");
@@ -114,9 +113,9 @@ public class FilmDBStorage implements FilmStorage {
         }
 
         return filmsWithStats;
-    }
+    }*/
 
-   /*@Override
+
      @Override
     public ArrayList<Film> getAllFilms() {
 
@@ -131,43 +130,8 @@ public class FilmDBStorage implements FilmStorage {
                 "GROUP BY film.FILM_ID, film.name, film.DESCRIPTION, film.release_date, film.DURATION,  motion_picture_association.MPA_ID , motion_picture_association.MPA_name, genres.GENRE_ID , genres.genre_name, likes.FILM_ID, likes.USER_ID");
         while (filmRows.next()) {
 
-            if (filmsMap.isEmpty()) {
-                Film film = new Film(
-                        filmRows.getString("name"),
-                        filmRows.getString("description"),
-                        filmRows.getDate("release_date").toLocalDate(),
-                        Duration.ofSeconds(filmRows.getLong("duration")));
-                film.setId(filmRows.getInt("film_id"));
 
-                int genreId = filmRows.getInt("GENRE_ID");
-                String genreName = filmRows.getString("GENRE_name");
-                Film.Genre genre = new Film.Genre();
-                genre.setId(genreId);
-                genre.setName(genreName);
-                Set<Film.Genre> genreSet = new HashSet<>();
-                genreSet.add(genre);
-                film.setGenres(genreSet);
-
-                int mpaId = filmRows.getInt("MPA_ID");
-                String mpaName = filmRows.getString("MPA_name");
-                Film.Mpa mpa = new Film.Mpa();
-                mpa.setId(mpaId);
-                mpa.setName(mpaName);
-                film.setMpa(mpa);
-
-                long likesUsers = filmRows.getInt("USER_ID");
-                int likesFilms = filmRows.getInt("FILM_ID");
-                Set<Long> like = new HashSet<>();
-                if (likesUsers != 0 && likesFilms != 0) {
-                    if (film.getId() == likesFilms) {
-                        like.add(likesUsers);
-                        film.setLikes(like);
-                    }
-                }
-                filmsMap.put(filmRows.getInt("film_id"),film);
-            }
-
-            for(Map.Entry<Integer, Film> entry : filmsMap.entrySet()) {
+           for(Map.Entry<Integer, Film> entry : filmsMap.entrySet()) {
                 Integer key = entry.getKey();
                 Film value = entry.getValue();
                 if (filmRows.getInt("film_id") != key) {
@@ -204,6 +168,7 @@ public class FilmDBStorage implements FilmStorage {
                         }
                     }
                     filmsMap.put(filmRows.getInt("film_id"),film);
+                    log.info("ДОБАВЛЕН ФИЛЬМ {} ", key);
                 } else if (filmRows.getInt("film_id") == key) {
                     if (!value.getGenres().isEmpty()) {
                         Set<Film.Genre> genreSet = value.getGenres();
@@ -220,6 +185,7 @@ public class FilmDBStorage implements FilmStorage {
                             genreSet.add(genre);
 
                             value.setGenres(genreSet);
+                            log.info("ОБНОВЛЕН ЖАНР ФИЛЬМ {} ", key);
                         }
 
                     }
@@ -229,16 +195,17 @@ public class FilmDBStorage implements FilmStorage {
 
                         if (!likeSet.contains((long) filmRows.getInt("USER_ID"))){
                             likeSet.add ((long) filmRows.getInt("USER_ID"));
+                            log.info("ОБНОВЛЕНЫ ЛАЙКИ ФИЛЬМ {} ", key);
                         }
                     }
 
                 }
-            }
+           }
         }
 
 
        return new ArrayList<>(filmsMap.values());
-    }*/
+    }
 
 
     @Override
